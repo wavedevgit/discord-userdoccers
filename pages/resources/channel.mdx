@@ -698,16 +698,28 @@ One of `recipient_id`, `recipients` or `access_tokens` is required. Bots cannot 
 
 | Field                          | Type                   | Description                                                                |
 | ------------------------------ | ---------------------- | -------------------------------------------------------------------------- |
-| recipient_id? **(deprecated)** | snowflake              | The recipient to DM                                                        |
+| recipient_id? **(deprecated)** | snowflake              | The user ID of the recipient to DM                                         |
 | recipients? ^1^                | array[snowflake]       | The users to include in the private channel                                |
 | access_tokens? ^2^             | array[string]          | The access tokens of users that have granted your app the `gdm.join` scope |
 | nicks? ^3^                     | map[snowflake, string] | A mapping of user IDs to their respective nicknames                        |
 
-^1^ When creating a group DM, the client user's ID can optionally be included in the `recipients` array. This allows creating a group DM with only one other user.
+^1^ When creating a group DM, the client user's ID can optionally be included in the `recipients` array. This allows creating a group DM with only one recipient.
 
 ^2^ Only usable by bots for OAuth2 requests, which can only create group DMs.
 
 ^3^ Requires `access_tokens` to be provided.
+
+<RouteHeader method="POST" url="/users/@me/channels/group-dm-shell">
+  Create Group DM Shell
+</RouteHeader>
+
+Creates a group DM channel with one recipient. Returns a [private channel](#channel-object) object. Fires a [Channel Create](/gateway/gateway-events#channel-create) Gateway event.
+
+###### JSON Params
+
+| Field        | Type      | Description                  |
+| ------------ | --------- | ---------------------------- |
+| recipient_id | snowflake | The user ID of the recipient |
 
 <RouteHeader method="GET" url="/guilds/{guild.id}/channels" supportsOAuth2="guilds.channels.read" supportsBot>
   List Guild Channels
