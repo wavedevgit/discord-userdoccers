@@ -81,6 +81,7 @@ export const ENDPOINT_VARS: Record<string, string | null> = {
   user_settings_proto_type: "/resources/user-settings-proto#user-settings-proto-type",
   user_trial_offer: "/resources/billing#user-trial-offer-object",
   voice_state: "/resources/voice#voice-state-object",
+  video_filter_asset: "/resources/user-settings#video-filter-asset-object",
   webhook: "/resources/webhook#webhook-object",
   widget_config: "/resources/widgets#widget-config-object",
 };
