@@ -15,6 +15,7 @@ export const ENDPOINT_VARS: Record<string, string | null> = {
   channel: "/resources/channel#channel-object",
   classification: "/resources/safety-hub#classification-object",
   cloud_attachment: "/topics/cloud-uploads#cloud-attachment-object",
+  collectibles_shop_tab: "/resources/collectibles#collectibles-shop-home-tab",
   collection: "/resources/store#storefront-collection-object",
   command: "/interactions/application-commands#application-command-object",
   company: "/resources/team#company-object",
@@ -80,8 +81,8 @@ export const ENDPOINT_VARS: Record<string, string | null> = {
   user: "/resources/user#user-object",
   user_settings_proto_type: "/resources/user-settings-proto#user-settings-proto-type",
   user_trial_offer: "/resources/billing#user-trial-offer-object",
-  voice_state: "/resources/voice#voice-state-object",
   video_filter_asset: "/resources/user-settings#video-filter-asset-object",
+  voice_state: "/resources/voice#voice-state-object",
   webhook: "/resources/webhook#webhook-object",
   widget_config: "/resources/widgets#widget-config-object",
 };

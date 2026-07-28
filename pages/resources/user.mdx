@@ -800,9 +800,7 @@ At least one active Gateway session is required to modify a user account's usern
 | avatar?                   | ?[image data](/reference#cdn-data) | The user's avatar; can be animated when the user has an applicable premium plan                                                                                   |
 | avatar_description?       | ?string                            | The description of the new user avatar, usually in the format "\{filename\}, added \{date\}" (max 1024 characters)                                                |
 | avatar_id?                | string                             | The ID of the recent avatar to use                                                                                                                                |
-| avatar_decoration_id?     | ?snowflake                         | The ID of the user's avatar decoration                                                                                                                            |
 | avatar_decoration_sku_id? | ?snowflake                         | The SKU ID of the user's avatar decoration                                                                                                                        |
-| nameplate_id?             | ?snowflake                         | The ID of the user's nameplate                                                                                                                                    |
 | nameplate_sku_id?         | ?snowflake                         | The SKU ID of the user's nameplate                                                                                                                                |
 | display_name_font_id?     | ?integer                           | The [display name font](#display-name-font) to use; can only be changed for premium users                                                                         |
 | display_name_effect_id?   | ?integer                           | The [display name effect](#display-name-effect) to use; can only be changed for premium users                                                                     |
@@ -936,7 +934,7 @@ This endpoint requires one of the following:
 | guild_id?                  | snowflake | The guild ID to get the user's member profile in                                                   |
 | connections_role_id?       | snowflake | The role ID to get the user's application role connection metadata in                              |
 | join_request_id?           | snowflake | The join request ID to use for the request                                                         |
-| type?                      | string    | The [profile analytics location](#profile-request-type)                                                |
+| type?                      | string    | The [profile analytics location](#profile-request-type)                                            |
 
 ###### Profile Request Type
 
