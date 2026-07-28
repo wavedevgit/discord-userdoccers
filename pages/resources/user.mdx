@@ -936,6 +936,18 @@ This endpoint requires one of the following:
 | guild_id?                  | snowflake | The guild ID to get the user's member profile in                                                   |
 | connections_role_id?       | snowflake | The role ID to get the user's application role connection metadata in                              |
 | join_request_id?           | snowflake | The join request ID to use for the request                                                         |
+| type?                      | string    | The [profile analytics location](#profile-request-type)                                                |
+
+###### Profile Request Type
+
+| Value          | Description                         |
+| -------------- | ----------------------------------- |
+| popout         | The profile popout                  |
+| modal          | The full profile modal              |
+| sidebar        | The profile DM sidebar              |
+| account_popout | The current user's account popout   |
+| action_sheet   | A user profile action sheet         |
+| you_screen     | The current user's profile overview |
 
 ###### Response Body
 
