@@ -1049,6 +1049,7 @@ These events directly correspond with a specific action or state change that has
 | [Guild Soundboard Sound Create](#guild-soundboard-sound-create)                                   | Guild soundboard sound was created                                                                |
 | [Guild Soundboard Sound Update](#guild-soundboard-sound-update)                                   | Guild soundboard sound was updated                                                                |
 | [Guild Soundboard Sound Delete](#guild-soundboard-sound-delete)                                   | Guild soundboard sound was deleted                                                                |
+| [Guild Soundboard Sounds Update](#guild-soundboard-sound-update)                                  | Guild soundboard sounds were updated                                                              |
 | [Soundboard Sounds](#soundboard-sounds)                                                           | Response to [Request Soundboard Sounds](#request-soundboard-sounds)                               |
 | [Guild Integrations Update](#guild-integrations-update)                                           | Guild integration was updated                                                                     |
 | [Integration Create](#integration-create)                                                         | Guild integration was created                                                                     |
@@ -2596,6 +2597,17 @@ Sent when a guild soundboard sound is deleted.
 | -------- | --------- | ------------------------------ |
 | guild_id | snowflake | The ID of the guild            |
 | sound_id | snowflake | The ID of the soundboard sound |
+
+#### Guild Soundboard Sounds Update
+
+Sent when multiple guild soundboard sounds are updated.
+
+###### Guild Soundboard Sounds Update Structure
+
+| Field             | Type                                                                            | Description                   |
+| ----------------- | ------------------------------------------------------------------------------- | ----------------------------- |
+| guild_id          | snowflake                                                                       | The ID of the guild           |
+| soundboard_sounds | array[[soundboard sound](/resources/soundboard#soundboard-sound-object) object] | The guild's soundboard sounds |
 
 #### Soundboard Sounds
 
