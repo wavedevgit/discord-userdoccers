@@ -12,6 +12,8 @@ export const ENDPOINT_VARS: Record<string, string | null> = {
   authenticator_type: "/authentication#authenticator-type",
   automod_rule: "/resources/auto-moderation#automod-rule-object",
   avatar: "/resources/user#avatar-structure",
+  branch: "/resources/application-library#application-branch-object",
+  build: "/resources/application-library#application-build-object",
   channel: "/resources/channel#channel-object",
   classification: "/resources/safety-hub#classification-object",
   cloud_attachment: "/topics/cloud-uploads#cloud-attachment-object",
