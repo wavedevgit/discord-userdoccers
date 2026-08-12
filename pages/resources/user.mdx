@@ -815,8 +815,8 @@ At least one active Gateway session is required to modify a user account's usern
 | date_of_birth? ^2^        | ISO8601 timestamp                  | The user's date of birth; can only be set once                                                                                                                    |
 | password? ^1^             | string                             | The user's current password; if the account does not have a password, this sets it                                                                                |
 | new_password? ^3^         | string                             | The user's new password (8-72 characters)                                                                                                                         |
-| push_provider             | string                             | The [push notification provider](/topics/push-notifications#push-notification-provider) of the device                                                             |
-| push_token                | string                             | The push notification token to register                                                                                                                           |
+| push_provider? ^6^        | string                             | The [push notification provider](/topics/push-notifications#push-notification-provider) of the device                                                             |
+| push_token? ^6^           | string                             | The push notification token to register                                                                                                                           |
 | push_voip_provider? ^6^   | string                             | The VOIP [push notification provider](/topics/push-notifications#push-notification-provider) of the device                                                        |
 | push_voip_token? ^6^      | string                             | The VOIP push notification token to register                                                                                                                      |
 
@@ -830,7 +830,7 @@ At least one active Gateway session is required to modify a user account's usern
 
 ^5^ If using unique usernames, the `username` field must be unique across Discord, and `discriminator` cannot be changed. Else, the `username` and `discriminator` fields must be unique across Discord, and changing the username may cause the discriminator to be randomized. See the [section on Discord's new username system](#unique-usernames) for more information. See the [Usernames and Nicknames section](#usernames-and-nicknames) for information on username restrictions.
 
-^6^ VOIP-specific push notification tokens are only used with PushKit on iOS.
+^6^ Mobile clients attach the device's push notification token to this request, since it returns a new authentication token. See [registering tokens](/topics/push-notifications#registering-tokens) for more information.
 
 <RouteHeader method="PATCH" url="/users/@me/account" supportsOAuth2="account.global_name.update">
   Modify Current User Account
