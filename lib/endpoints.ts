@@ -45,6 +45,7 @@ export const ENDPOINT_VARS: Record<string, string | null> = {
   message: "/resources/message#message-object",
   notification_center_item: "/resources/notification-center#notification-center-item-object",
   notification_settings_snapshot: "/resources/user-settings#notification-settings-snapshot-object",
+  order: "/resources/orders#order-object",
   overwrite: "/resources/channel#permission-overwrite-object",
   payment: "/resources/payment#payment-object",
   payment_source: "/resources/billing#payment-source-object",
