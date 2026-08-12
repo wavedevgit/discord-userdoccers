@@ -61,6 +61,7 @@ export const ENDPOINT_VARS: Record<string, string | null> = {
   referral: "/resources/premium-referral#premium-referral-object",
   role: "/resources/guild#role-object",
   sdk_release: "/resources/application#social-sdk-release-object",
+  scheduled_message: "/resources/scheduled-messages#scheduled-message-object",
   sku: "/resources/store#sku-object",
   sound: "/resources/soundboard#soundboard-sound-object",
   stage_instance: "/resources/stage-instance#stage-instance-object",
