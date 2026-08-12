@@ -54,6 +54,7 @@ export const ENDPOINT_VARS: Record<string, string | null> = {
   premium_guild_subscription: "/resources/guild#premium-guild-subscription-object",
   product: "/resources/store#storefront-product-object",
   product_listing: "/resources/guild#guild-product-listing-object",
+  project: "/resources/vibegrations#vibegrations-project-object",
   promotion: "/resources/promotion#promotion-object",
   quest: "/resources/quests#quest-object",
   quest_content_type: "/resources/quests#quest-content-type",

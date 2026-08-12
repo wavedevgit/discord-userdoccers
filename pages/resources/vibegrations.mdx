@@ -1,0 +1,135 @@
+# Vibegrations
+
+Vibegrations projects provide collaborative project editing, previews, and publishing.
+
+### Vibegrations Project Object
+
+A Vibegrations project links a project workspace to its published and preview applications and guilds.
+
+###### Vibegrations Project Structure
+
+| Field                   | Type       | Description                                   |
+| ----------------------- | ---------- | --------------------------------------------- |
+| id                      | string     | The ID of the project                         |
+| name                    | string     | The name of the project, up to 128 characters |
+| application_id          | snowflake  | The ID of the published application           |
+| preview_application_id? | ?snowflake | The ID of the preview application             |
+| guild_id?               | ?snowflake | The ID of the guild used for publishing       |
+| preview_guild_id?       | ?snowflake | The ID of the guild used for previews         |
+
+###### Example Vibegrations Project
+
+```json
+{
+  "id": "project_72eb3a08",
+  "name": "Raid Planner",
+  "application_id": "1485291404501544960",
+  "preview_application_id": "1485291973488222208",
+  "guild_id": "1485289962454253568",
+  "preview_guild_id": "1485289962454253568"
+}
+```
+
+### Vibegrations Integration Status Object
+
+The integration status describes whether a project's preview can be launched.
+
+###### Vibegrations Integration Status Structure
+
+| Field                   | Type    | Description                                      |
+| ----------------------- | ------- | ------------------------------------------------ |
+| bot_permissions_changed | boolean | Whether the preview bot permissions have changed |
+| integration_installed   | boolean | Whether the preview integration is installed     |
+| preview_ready           | boolean | Whether the project preview is ready             |
+
+## Endpoints
+
+Endpoints containing `{project.id}` accept the string `id` from a [Vibegrations project](#vibegrations-project-object).
+
+<RouteHeader method="GET" url="/vibegrations/projects">
+  List Vibegrations Projects
+</RouteHeader>
+
+Returns an array of [Vibegrations project](#vibegrations-project-object) objects.
+
+<RouteHeader method="POST" url="/vibegrations/projects">
+  Create Vibegrations Project
+</RouteHeader>
+
+Creates a Vibegrations project. Returns the new [Vibegrations project](#vibegrations-project-object) object on success.
+
+###### JSON Params
+
+| Field    | Type      | Description                                  |
+| -------- | --------- | -------------------------------------------- |
+| guild_id | snowflake | The ID of the guild to create the project in |
+
+<RouteHeader method="GET" url="/vibegrations/projects/{project.id}">
+  Get Vibegrations Project
+</RouteHeader>
+
+Returns a project and its current preview integration status.
+
+###### Response Body
+
+| Field                   | Type                                                        | Description                                      |
+| ----------------------- | ----------------------------------------------------------- | ------------------------------------------------ |
+| project                 | [Vibegrations project](#vibegrations-project-object) object | The project                                      |
+| bot_permissions_changed | boolean                                                     | Whether the preview bot permissions have changed |
+| integration_installed   | boolean                                                     | Whether the preview integration is installed     |
+| preview_ready           | boolean                                                     | Whether the project preview is ready             |
+
+<RouteHeader method="PATCH" url="/vibegrations/projects/{project.id}">
+  Modify Vibegrations Project
+</RouteHeader>
+
+Modifies a Vibegrations project. Returns the updated [Vibegrations project](#vibegrations-project-object) object on success.
+
+###### JSON Params
+
+| Field             | Type       | Description                               |
+| ----------------- | ---------- | ----------------------------------------- |
+| name?             | string     | The name of the project, 1-128 characters |
+| guild_id?         | ?snowflake | The ID of the guild used for publishing   |
+| preview_guild_id? | ?snowflake | The ID of the guild used for previews     |
+
+<RouteHeader method="POST" url="/vibegrations/projects/{project.id}/ws-ticket">
+  Create Vibegrations Project WebSocket Ticket
+</RouteHeader>
+
+Creates the short-lived ticket used to connect to the project WebSocket.
+
+###### Response Body
+
+| Field  | Type   | Description                           |
+| ------ | ------ | ------------------------------------- |
+| url    | string | The project WebSocket base URL        |
+| ticket | string | The ticket used to open the WebSocket |
+
+<RouteHeader method="POST" url="/vibegrations/projects/{project.id}/publish">
+  Publish Vibegrations Project
+</RouteHeader>
+
+Publishes the project and returns the application and updated project.
+
+###### Response Body
+
+| Field       | Type                                                            | Description               |
+| ----------- | --------------------------------------------------------------- | ------------------------- |
+| application | [application](/resources/application#application-object) object | The published application |
+| project     | [Vibegrations project](#vibegrations-project-object) object     | The updated project       |
+
+<RouteHeader method="POST" url="/vibegrations/projects/{project.id}/publish-preview">
+  Publish Vibegrations Project Preview
+</RouteHeader>
+
+Publishes a project preview and returns its application, integration state, and updated project.
+
+###### Response Body
+
+| Field                   | Type                                                            | Description                                      |
+| ----------------------- | --------------------------------------------------------------- | ------------------------------------------------ |
+| application             | [application](/resources/application#application-object) object | The preview application                          |
+| bot_permissions_changed | boolean                                                         | Whether the preview bot permissions have changed |
+| integration_installed   | boolean                                                         | Whether the preview integration is installed     |
+| project                 | [Vibegrations project](#vibegrations-project-object) object     | The updated project                              |
