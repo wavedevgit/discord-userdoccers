@@ -1,0 +1,165 @@
+# Guild Rooms
+
+Guild rooms contain spatial user state and interactive objects for a guild voice channel.
+
+### Guild Room Object
+
+A guild room contains the room's background, connected users, and interactive objects.
+
+###### Guild Room Structure
+
+| Field      | Type                                                                  | Description                                                       |
+| ---------- | --------------------------------------------------------------------- | ----------------------------------------------------------------- |
+| room_id    | snowflake                                                             | The ID of the room                                                |
+| users      | array[[guild room user](#guild-room-user-structure) object]           | The users connected to the room                                   |
+| background | integer                                                               | The [background type](#guild-room-background-type) of the room    |
+| objects    | map[string, array[[guild room object](#guild-room-object-structure)]] | The room objects, keyed by [object type](#guild-room-object-type) |
+
+###### Guild Room User Structure
+
+| Field       | Type                                                         | Description                        |
+| ----------- | ------------------------------------------------------------ | ---------------------------------- |
+| user_id     | snowflake                                                    | The ID of the user                 |
+| position    | [guild room position](#guild-room-position-structure) object | The user's position in the room    |
+| status_id   | integer                                                      | The ID of the user's room status   |
+| status_text | string                                                       | The text of the user's room status |
+
+###### Guild Room Position Structure
+
+| Field | Type  | Description                                   |
+| ----- | ----- | --------------------------------------------- |
+| x     | float | The horizontal position as a percentage value |
+| y     | float | The vertical position as a percentage value   |
+
+###### Guild Room Object Structure
+
+| Field         | Type                                                         | Description                                         |
+| ------------- | ------------------------------------------------------------ | --------------------------------------------------- |
+| object_id     | snowflake                                                    | The ID of the room object                           |
+| object_type   | integer                                                      | The [type](#guild-room-object-type) of room object  |
+| created_by    | snowflake                                                    | The ID of the user who created the room object      |
+| updated_at?   | ISO8601 timestamp                                            | When the room object was last updated               |
+| updated_by    | snowflake                                                    | The ID of the user who last updated the room object |
+| content? ^1^  | string                                                       | The text displayed by the note                      |
+| position? ^1^ | [guild room position](#guild-room-position-structure) object | The position of the note in the room                |
+
+^1^ Only included when `object_type` is `NOTE`.
+
+###### Guild Room Object Type
+
+| Value | Name  | Description          |
+| ----- | ----- | -------------------- |
+| 1     | NOTE  | A user-created note  |
+| 2     | PLANT | An interactive plant |
+
+###### Guild Room Background Type
+
+| Value | Name    | Description                 |
+| ----- | ------- | --------------------------- |
+| 0     | DEFAULT | The default room background |
+
+###### Example Guild Room
+
+```json
+{
+  "room_id": "1284759012345678901",
+  "users": [
+    {
+      "user_id": "803511102246789120",
+      "position": { "x": 49.5, "y": 10 },
+      "status_id": 0,
+      "status_text": ""
+    }
+  ],
+  "background": 0,
+  "objects": {
+    "1": [
+      {
+        "object_id": "1284759123456789012",
+        "object_type": 1,
+        "created_by": "803511102246789120",
+        "updated_at": "2026-08-12T16:24:31.000000+00:00",
+        "updated_by": "803511102246789120",
+        "content": "Game night at 8 PM",
+        "position": { "x": 65.2, "y": 42.8 }
+      }
+    ],
+    "2": []
+  }
+}
+```
+
+## Endpoints
+
+<RouteHeader method="GET" url="/guilds/{guild.id}/rooms/{room.id}">
+  Get Guild Room
+</RouteHeader>
+
+Returns a [guild room](#guild-room-object) object.
+
+<RouteHeader method="POST" url="/guilds/{guild.id}/rooms/{room.id}/connect">
+  Connect Guild Room
+</RouteHeader>
+
+Connects the current user to a guild room. Returns the updated [guild room](#guild-room-object) object on success.
+
+###### JSON Params
+
+| Field    | Type                                                         | Description                                                        |
+| -------- | ------------------------------------------------------------ | ------------------------------------------------------------------ |
+| position | [guild room position](#guild-room-position-structure) object | The initial position of the current user (default `{"x":0,"y":0}`) |
+
+<RouteHeader method="POST" url="/guilds/{guild.id}/rooms/{room.id}/update">
+  Update Guild Room
+</RouteHeader>
+
+Modifies the room background or the current user's room state. Returns the updated [guild room](#guild-room-object) object on success.
+
+###### JSON Params
+
+| Field             | Type                                                         | Description                                                    |
+| ----------------- | ------------------------------------------------------------ | -------------------------------------------------------------- |
+| background?       | integer                                                      | The [background type](#guild-room-background-type) of the room |
+| user_position?    | [guild room position](#guild-room-position-structure) object | The current user's position in the room                        |
+| user_status_id?   | integer                                                      | The ID of the current user's room status                       |
+| user_status_text? | string                                                       | The text of the current user's room status                     |
+
+<RouteHeader method="POST" url="/guilds/{guild.id}/rooms/{room.id}/objects">
+  Create Guild Room Object
+</RouteHeader>
+
+Creates an object in the room.
+
+###### JSON Params
+
+| Field         | Type                                                         | Description                                        |
+| ------------- | ------------------------------------------------------------ | -------------------------------------------------- |
+| object_type   | integer                                                      | The [type](#guild-room-object-type) of room object |
+| content? ^1^  | string                                                       | The text displayed by the note                     |
+| position? ^1^ | [guild room position](#guild-room-position-structure) object | The position of the note in the room               |
+
+^1^ Used when `object_type` is `NOTE`.
+
+<RouteHeader method="POST" url="/guilds/{guild.id}/rooms/{room.id}/objects/{object.id}/update">
+  Update Guild Room Object
+</RouteHeader>
+
+Modifies an object in the room.
+
+###### JSON Params
+
+| Field       | Type    | Description                                        |
+| ----------- | ------- | -------------------------------------------------- |
+| object_type | integer | The [type](#guild-room-object-type) of room object |
+
+<RouteHeader method="DELETE" url="/guilds/{guild.id}/rooms/{room.id}/objects/{object.id}">
+  Delete Guild Room Object
+</RouteHeader>
+
+Deletes an object from the room.
+
+###### JSON Params
+
+| Field       | Type    | Description                                        |
+| ----------- | ------- | -------------------------------------------------- |
+| object_type | integer | The [type](#guild-room-object-type) of room object |

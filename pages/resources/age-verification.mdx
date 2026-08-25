@@ -1,0 +1,236 @@
+# Age Verification
+
+Age verification endpoints determine available verification methods and initiate age assurance flows.
+
+### Age Verification Result Object
+
+The result of initiating an age verification flow.
+
+###### Age Verification Result Structure
+
+| Field                     | Type                                                     | Description                                        |
+| ------------------------- | -------------------------------------------------------- | -------------------------------------------------- |
+| verification_request_id?  | string                                                   | The ID of the verification request                 |
+| verification_webview_url? | string                                                   | The URL used to complete web-based verification    |
+| verification_vendor_name? | string                                                   | The name of the verification vendor                |
+| incode_parameters?        | [Incode parameters](#incode-parameters-structure) object | Parameters used to complete verification in Incode |
+
+###### Incode Parameters Structure
+
+| Field         | Type    | Description                                                  |
+| ------------- | ------- | ------------------------------------------------------------ |
+| api_url?      | string  | The Incode API URL                                           |
+| session_token | string  | The Incode session token                                     |
+| consent_id    | string  | The Incode consent ID                                        |
+| interview_id  | string  | The Incode interview ID                                      |
+| method?       | integer | The [age verification method](#age-verification-method-type) |
+
+### Age Verification Method Object
+
+An age verification method offered to the current user.
+
+###### Age Verification Method Structure
+
+| Field        | Type                                                                            | Description                                              |
+| ------------ | ------------------------------------------------------------------------------- | -------------------------------------------------------- |
+| method       | integer                                                                         | The [verification method](#age-verification-method-type) |
+| vendor       | string                                                                          | The [verification vendor](#age-verification-vendor)      |
+| title        | string                                                                          | The localized method title                               |
+| description  | string                                                                          | The localized method description                         |
+| provided_by? | ?string                                                                         | The localized provider attribution                       |
+| icon?        | ?[age verification method icon](#age-verification-method-icon-structure) object | The icon displayed for the method                        |
+
+###### Age Verification Method Icon Structure
+
+| Field | Type                                                                                            | Description                      |
+| ----- | ----------------------------------------------------------------------------------------------- | -------------------------------- |
+| paths | array[[age verification method icon path](#age-verification-method-icon-path-structure) object] | The SVG paths composing the icon |
+
+###### Age Verification Method Icon Path Structure
+
+| Field      | Type   | Description                                 |
+| ---------- | ------ | ------------------------------------------- |
+| d          | string | The SVG path data                           |
+| fill_rule? | string | The SVG fill rule, currently only `evenodd` |
+
+###### Age Verification Method Type
+
+| Value | Name                  | Description                          |
+| ----- | --------------------- | ------------------------------------ |
+| 1     | FACIAL_AGE_ESTIMATION | Facial age estimation                |
+| 2     | ID_VERIFICATION       | Identity document verification       |
+| 3     | MODULAR               | Vendor-selected modular verification |
+| 9     | GOOGLE_WALLET         | Google Wallet age verification       |
+
+###### Age Verification Vendor
+
+| Value         | Description   |
+| ------------- | ------------- |
+| K_ID          | k-ID          |
+| GOOGLE_WALLET | Google Wallet |
+| INCODE        | Incode        |
+
+### Age Verification Methods Response Object
+
+The available age verification methods.
+
+###### Age Verification Methods Response Structure
+
+| Field          | Type                                                                     | Description                                      |
+| -------------- | ------------------------------------------------------------------------ | ------------------------------------------------ |
+| methods        | array[[age verification method](#age-verification-method-object) object] | The available age verification methods           |
+| footer_message | ?string                                                                  | The localized footer displayed below the methods |
+
+###### Example Age Verification Methods Response
+
+```json
+{
+  "methods": [
+    {
+      "method": 1,
+      "vendor": "INCODE",
+      "title": "Estimate your age",
+      "description": "Use a video selfie to estimate your age.",
+      "provided_by": "Provided by Incode",
+      "icon": {
+        "paths": [
+          {
+            "d": "M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20Z",
+            "fill_rule": "evenodd"
+          }
+        ]
+      }
+    }
+  ],
+  "footer_message": null
+}
+```
+
+### Reactive Check Object
+
+The result of the current user's reactive age verification check.
+
+###### Reactive Check Structure
+
+| Field  | Type   | Description                                         |
+| ------ | ------ | --------------------------------------------------- |
+| status | string | The [reactive check status](#reactive-check-status) |
+
+###### Reactive Check Status
+
+| Value  | Description                                             |
+| ------ | ------------------------------------------------------- |
+| miss   | The check did not find a reason to require verification |
+| passed | The check completed successfully                        |
+
+## Endpoints
+
+<RouteHeader method="POST" url="/age-verification/test">
+  Test Age Assurance
+</RouteHeader>
+
+Initiates a test age assurance flow. Returns an [age verification result](#age-verification-result-object) object on success.
+
+###### JSON Params
+
+| Field  | Type    | Description                                                  |
+| ------ | ------- | ------------------------------------------------------------ |
+| method | integer | The [age verification method](#age-verification-method-type) |
+
+<RouteHeader method="POST" url="/age-verification/verify">
+  Verify Age
+</RouteHeader>
+
+Initiates age verification with the selected method and vendor. Returns an [age verification result](#age-verification-result-object) object on success.
+
+###### JSON Params
+
+| Field  | Type    | Description                                                  |
+| ------ | ------- | ------------------------------------------------------------ |
+| method | integer | The [age verification method](#age-verification-method-type) |
+| vendor | string  | The [age verification vendor](#age-verification-vendor)      |
+
+<RouteHeader method="POST" url="/age-verification/verify/v2">
+  Verify Age v2
+</RouteHeader>
+
+Initiates the second version of age verification with the selected method and vendor. Returns an [age verification result](#age-verification-result-object) object on success.
+
+###### JSON Params
+
+| Field  | Type    | Description                                                  |
+| ------ | ------- | ------------------------------------------------------------ |
+| method | integer | The [age verification method](#age-verification-method-type) |
+| vendor | string  | The [age verification vendor](#age-verification-vendor)      |
+
+<RouteHeader method="POST" url="/age-verification/incode/interview">
+  Register Incode Interview
+</RouteHeader>
+
+Registers a completed Incode interview. Returns a 204 empty response on success.
+
+###### JSON Params
+
+| Field        | Type   | Description             |
+| ------------ | ------ | ----------------------- |
+| interview_id | string | The Incode interview ID |
+
+<RouteHeader method="POST" url="/age-verification/incode/session">
+  Create Incode Session
+</RouteHeader>
+
+Creates an Incode age verification session. Returns an [age verification result](#age-verification-result-object) object on success.
+
+###### JSON Params
+
+| Field                  | Type   | Description                                      |
+| ---------------------- | ------ | ------------------------------------------------ |
+| previous_interview_id? | string | The ID of the previous Incode interview to retry |
+
+<RouteHeader method="GET" url="/age-verification/methods">
+  List Age Verification Methods
+</RouteHeader>
+
+Returns the available [age verification method types](#age-verification-method-type).
+
+###### Response Body
+
+| Field   | Type           | Description                            |
+| ------- | -------------- | -------------------------------------- |
+| methods | array[integer] | The available age verification methods |
+
+<RouteHeader method="GET" url="/age-verification/methods/v2">
+  List Age Verification Methods v2
+</RouteHeader>
+
+Returns an [age verification methods response](#age-verification-methods-response-object) object.
+
+<RouteHeader method="GET" url="/users/@me/age-verification/check">
+  Get Age Verification Reactive Check
+</RouteHeader>
+
+Returns a [reactive check](#reactive-check-object) object.
+
+<RouteHeader method="POST" url="/users/@me/age-verification/reset">
+  Reset Age Verification
+</RouteHeader>
+
+Clears the current user's pending age verification state. Returns a 204 empty response on success.
+
+<RouteHeader method="POST" url="/age-verification/suspended/methods" unauthenticated>
+  List Suspended User Age Verification Methods
+</RouteHeader>
+
+Returns the age verification methods available to a suspended user.
+
+###### JSON Params
+
+| Field | Type   | Description              |
+| ----- | ------ | ------------------------ |
+| token | string | The suspended user token |
+
+###### Response Body
+
+| Field   | Type           | Description                            |
+| ------- | -------------- | -------------------------------------- |
+| methods | array[integer] | The available age verification methods |

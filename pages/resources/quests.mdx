@@ -901,30 +901,6 @@ Returns the sponsored quest that should be shown to the user in a specific place
 | start | string | The gradient start color |
 | end   | string | The gradient end color   |
 
-<RouteHeader method="GET" url="/quests/earned-decision">
-  Get Earned Quest Placement
-</RouteHeader>
-
-Returns the earned quests that should be shown to the user in a specific content area.
-
-###### Query String Params
-
-| Field                            | Type          | Description                                                                    |
-| -------------------------------- | ------------- | ------------------------------------------------------------------------------ |
-| quest_ids                        | array[string] | Quest IDs to evaluate (1-20)                                                   |
-| content                          | integer       | The [content location](#quest-content-type) to get earned quests for           |
-| client_heartbeat_session_id? ^1^ | string        | A client-generated UUID representing the current persisted analytics heartbeat |
-
-^1^ This value is also sent in the [client properties](/reference#client-properties).
-
-###### Response Body
-
-| Field                 | Type                                           | Description                                        |
-| --------------------- | ---------------------------------------------- | -------------------------------------------------- |
-| quests                | map[snowflake, ?[quest](#quest-object) object] | The earned quests, keyed by quest ID               |
-| response_ttl_seconds? | integer                                        | How long the response should be cached, in seconds |
-| request_id?           | ?string                                        | The advertisement decision request ID              |
-
 <RouteHeader method="GET" url="/quests/get-decisions">
   Get Quest Decisions
 </RouteHeader>

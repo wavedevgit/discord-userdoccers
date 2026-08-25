@@ -72,3 +72,16 @@ Summarizes the content of a thread. Returns a 204 empty response on success. The
 | Field      | Type    | Description                                                     |
 | ---------- | ------- | --------------------------------------------------------------- |
 | ephemeral? | boolean | Whether the summary message should be ephemeral (default false) |
+
+<RouteHeader method="POST" url="/ai/text-transform">
+  Transform Text
+</RouteHeader>
+
+Transforms text using the selected prompt.
+
+###### JSON Params
+
+| Field   | Type   | Description |
+| ------- | ------ | ----------- |
+| content | string | The content |
+| prompt  | string | The prompt  |

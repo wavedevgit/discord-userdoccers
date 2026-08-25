@@ -4,6 +4,12 @@ sort-name: Guild
 
 # Guilds
 
+<RouteHeader method="GET" url="/subscription-plans/{subscription_plan.id}/guild-role-subscription-group-listing">
+  Get Guild Role Subscription Group Listing
+</RouteHeader>
+
+Returns the guild role subscription group listing associated with the subscription plan.
+
 Guilds in Discord represent an isolated collection of users and channels, and are often referred to as 'servers' in the UI.
 
 ### Guild Object
@@ -4075,3 +4081,131 @@ Returns a URL to the attachment for the given guild and product ID. Requires an 
 | Field | Type   | Description               |
 | ----- | ------ | ------------------------- |
 | url   | string | The URL to the attachment |
+
+<RouteHeader method="PATCH" url="/guilds/{guild.id}/members/{member.id}/nick">
+  Modify Guild Member Nick
+</RouteHeader>
+
+Modifies the guild member's nickname. Returns an object containing the updated nickname on success.
+
+###### JSON Params
+
+| Field | Type    | Description                                             |
+| ----- | ------- | ------------------------------------------------------- |
+| nick  | ?string | The nickname, or `null` or an empty string to remove it |
+
+###### Response Body
+
+| Field | Type    | Description                        |
+| ----- | ------- | ---------------------------------- |
+| nick  | ?string | The updated nickname of the member |
+
+<RouteHeader method="GET" url="/guilds/{guild.id}/prune/v2">
+  Get Guild Prune v2
+</RouteHeader>
+
+Starts a streamed estimate of the number of members that would be removed by a prune. Requires the `KICK_MEMBERS` permission.
+
+###### Query String Params
+
+| Field          | Type             | Description                                                    |
+| -------------- | ---------------- | -------------------------------------------------------------- |
+| days?          | integer          | The number of days of inactivity to count (7 or 30, default 7) |
+| include_roles? | array[snowflake] | The IDs of roles to include in the estimate                    |
+
+<RouteHeader method="GET" url="/guilds/{guild.id}/messages/official">
+  List Guild Official Messages
+</RouteHeader>
+
+Returns official [message](/resources/message#message-object) objects for the guild in reverse chronological order.
+
+###### Query String Params
+
+| Field   | Type      | Description                                  |
+| ------- | --------- | -------------------------------------------- |
+| before? | snowflake | Get official messages before this message ID |
+
+###### Response Body
+
+| Field    | Type                                                       | Description                         |
+| -------- | ---------------------------------------------------------- | ----------------------------------- |
+| messages | array[[message](/resources/message#message-object) object] | The official messages               |
+| has_more | boolean                                                    | Whether more messages are available |
+
+<RouteHeader method="GET" url="/guilds/{guild.id}/config-gates">
+  List Guild Config Gates
+</RouteHeader>
+
+Returns the guild's feature configuration gates.
+
+###### Response Body
+
+| Field                                      | Type    | Description                                            |
+| ------------------------------------------ | ------- | ------------------------------------------------------ |
+| guild_verification_role_enabled?           | boolean | Whether the guild verification role setting is enabled |
+| application_identity_linked_roles_enabled? | boolean | Whether application identity linked roles are enabled  |
+
+<RouteHeader method="GET" url="/guilds/{guild.id}/voice-hangout/recent-images">
+  List Guild Voice Hangout Recent Images
+</RouteHeader>
+
+Returns image hashes recently used for voice hangout banners in the guild.
+
+###### Response Body
+
+| Field        | Type          | Description                                   |
+| ------------ | ------------- | --------------------------------------------- |
+| image_hashes | array[string] | The recently used voice hangout banner hashes |
+
+<RouteHeader method="PATCH" url="/guilds/{guild.id}/theme">
+  Modify Guild Theme
+</RouteHeader>
+
+Modifies the guild theme. Returns the updated guild theme on success.
+
+###### JSON Params
+
+| Field   | Type    | Description                        |
+| ------- | ------- | ---------------------------------- |
+| enabled | boolean | Whether the guild theme is enabled |
+
+<RouteHeader method="GET" url="/guilds/{guild.id}/application-commands/{application-command.id}">
+  Get Guild Commands For Application
+</RouteHeader>
+
+Returns an object containing application commands and their permissions for the guild.
+
+###### Response Body
+
+| Field                | Type                                                                                               | Description                             |
+| -------------------- | -------------------------------------------------------------------------------------------------- | --------------------------------------- |
+| application_commands | array[[application command](/interactions/application-commands#application-command-object) object] | The application's commands in the guild |
+| permissions          | array[guild application command permissions object]                                                | The permissions for the commands        |
+
+<RouteHeader method="POST" url="/guilds/automations/email-domain-lookup/verify">
+  Verify Hub Email
+</RouteHeader>
+
+Verifies hub email.
+
+###### JSON Params
+
+| Field    | Type      | Description         |
+| -------- | --------- | ------------------- |
+| token    | string    | The token           |
+| code     | string    | The code            |
+| guild_id | snowflake | The ID of the guild |
+| email    | string    | The email           |
+
+<RouteHeader method="PATCH" url="/debug/applied-boosts/ends-at">
+  Modify Applied Boost Modify End Date
+</RouteHeader>
+
+Modifies applied boost modify end date.
+
+###### JSON Params
+
+| Field             | Type             | Description                  |
+| ----------------- | ---------------- | ---------------------------- |
+| applied_boost_ids | array[snowflake] | The IDs of the applied boost |
+| ends_at?          | integer          | The ends at                  |

@@ -1,0 +1,172 @@
+# Badges
+
+Badges represent profile achievements, account status, and progress toward tiered accomplishments.
+
+### Badge Object
+
+A badge in a user's badge directory.
+
+###### Badge Structure
+
+| Field                      | Type                                                            | Description                                     |
+| -------------------------- | --------------------------------------------------------------- | ----------------------------------------------- |
+| badge_id                   | integer                                                         | The [type](#badge-type) of badge                |
+| name                       | string                                                          | The badge name                                  |
+| description                | string                                                          | The badge description                           |
+| owned                      | boolean                                                         | Whether the user owns the badge                 |
+| is_earnable                | boolean                                                         | Whether the user can earn the badge             |
+| current_tier?              | ?string                                                         | The key of the tier currently owned by the user |
+| next_tier?                 | ?string                                                         | The key of the next tier available to the user  |
+| tiers                      | array[[badge tier](#badge-tier-structure) object]               | The badge's tiers                               |
+| requirements?              | array[[badge requirement](#badge-requirement-structure) object] | The requirements for earning the badge          |
+| progress?                  | array[[badge progress](#badge-progress-structure) object]       | The user's progress toward the badge            |
+| obtained_at?               | ?ISO8601 timestamp                                              | When the badge was obtained                     |
+| tier_obtained_at?          | map[string, ISO8601 timestamp]                                  | When each badge tier was obtained               |
+| simple_icon_url?           | string                                                          | The URL of the badge's simple icon              |
+| complex_icon_static_url?   | string                                                          | The URL of the badge's static complex icon      |
+| complex_icon_animated_url? | string                                                          | The URL of the badge's animated complex icon    |
+| rarity?                    | integer                                                         | The [rarity](#badge-rarity) of the badge        |
+| leveling_instructions?     | string                                                          | Instructions for progressing the badge          |
+
+###### Badge Type
+
+| Value | Name                | Description                  |
+| ----- | ------------------- | ---------------------------- |
+| 1     | PREMIUM_TENURE      | Nitro tenure                 |
+| 2     | PARTNER             | Partnered guild owner        |
+| 3     | CERTIFIED_MODERATOR | Certified moderator          |
+| 4     | HYPESQUAD           | HypeSquad Events             |
+| 5     | HYPESQUAD_HOUSE_1   | HypeSquad Bravery            |
+| 6     | HYPESQUAD_HOUSE_2   | HypeSquad Brilliance         |
+| 7     | HYPESQUAD_HOUSE_3   | HypeSquad Balance            |
+| 8     | BUG_HUNTER_LEVEL_1  | Level 1 Discord Bug Hunter   |
+| 9     | BUG_HUNTER_LEVEL_2  | Level 2 Discord Bug Hunter   |
+| 10    | VERIFIED_DEVELOPER  | Early verified bot developer |
+| 11    | EARLY_SUPPORTER     | Early Nitro supporter        |
+| 12    | GUILD_BOOSTER       | Guild booster                |
+| 13    | LEGACY_USERNAME     | Legacy username              |
+| 14    | QUEST_COMPLETED     | Quest completion             |
+| 15    | APRIL_FOOLS_2026    | 2026 April Fools event       |
+| 16    | ORB_PROFILE         | Orbs profile                 |
+| 17    | GIFTING             | Gifting                      |
+| 18    | ACCOUNT_AGE         | Account age milestone        |
+| 19    | STREAMING           | Streaming milestone          |
+| 20    | GAME_TIME           | Game time milestone          |
+| 21    | GAME_VARIETY        | Game variety milestone       |
+| 22    | STAFF               | Discord staff                |
+
+###### Badge Tier Structure
+
+| Field                      | Type                                                            | Description                                 |
+| -------------------------- | --------------------------------------------------------------- | ------------------------------------------- |
+| key                        | string                                                          | The tier key                                |
+| name?                      | string                                                          | The tier name                               |
+| owned                      | boolean                                                         | Whether the user owns the tier              |
+| milestone_text?            | string                                                          | Text describing the tier milestone          |
+| requirements               | array[[badge requirement](#badge-requirement-structure) object] | The requirements for obtaining the tier     |
+| simple_icon_url?           | string                                                          | The URL of the tier's simple icon           |
+| complex_icon_static_url?   | string                                                          | The URL of the tier's static complex icon   |
+| complex_icon_animated_url? | string                                                          | The URL of the tier's animated complex icon |
+| rarity?                    | integer                                                         | The [rarity](#badge-rarity) of the tier     |
+
+###### Badge Requirement Structure
+
+| Field     | Type    | Description                                |
+| --------- | ------- | ------------------------------------------ |
+| threshold | integer | The value required to meet the requirement |
+
+###### Badge Progress Structure
+
+| Field                 | Type    | Description                              |
+| --------------------- | ------- | ---------------------------------------- |
+| current               | integer | The user's current progress              |
+| floor?                | integer | The starting value for the current tier  |
+| threshold             | integer | The progress required for completion     |
+| progress_helper_text? | string  | Text explaining how progress is measured |
+
+###### Badge Rarity
+
+| Value | Name   | Description   |
+| ----- | ------ | ------------- |
+| 1     | COMMON | Common rarity |
+| 2     | RARE   | Rare rarity   |
+| 3     | EPIC   | Epic rarity   |
+| 5     | MYTHIC | Mythic rarity |
+
+###### Example Badge
+
+```json
+{
+  "badge_id": 18,
+  "name": "Account Age",
+  "description": "A badge that levels up with account age.",
+  "owned": true,
+  "is_earnable": true,
+  "current_tier": "five_years",
+  "next_tier": "ten_years",
+  "tiers": [
+    {
+      "key": "five_years",
+      "name": "5 Years",
+      "owned": true,
+      "milestone_text": "Account created at least 5 years ago",
+      "requirements": [{ "threshold": 5 }],
+      "simple_icon_url": "https://cdn.discordapp.com/badge-icons/3f90f4d85f6b4af492f2483648afb74a.png",
+      "rarity": 1
+    },
+    {
+      "key": "ten_years",
+      "name": "10 Years",
+      "owned": false,
+      "milestone_text": "Account created at least 10 years ago",
+      "requirements": [{ "threshold": 10 }],
+      "simple_icon_url": "https://cdn.discordapp.com/badge-icons/65036e9a4a974ee48f14f52395519f26.png",
+      "rarity": 2
+    }
+  ],
+  "progress": [
+    {
+      "current": 7,
+      "floor": 5,
+      "threshold": 10,
+      "progress_helper_text": "3 years until the next tier"
+    }
+  ],
+  "obtained_at": "2024-05-14T18:22:31.000000+00:00",
+  "tier_obtained_at": {
+    "five_years": "2024-05-14T18:22:31.000000+00:00"
+  },
+  "rarity": 1,
+  "leveling_instructions": "Keep using this account to reach the next tier."
+}
+```
+
+## Endpoints
+
+<RouteHeader method="GET" url="/users/{user.id}/badges">
+  List User Badges
+</RouteHeader>
+
+Returns the user's badge directory.
+
+The current user may be specified as `@me`.
+
+###### Response Body
+
+| Field  | Type                                 | Description                       |
+| ------ | ------------------------------------ | --------------------------------- |
+| badges | array[[badge](#badge-object) object] | The badges available for the user |
+
+###### Example Response
+
+```json
+{
+  "badges": []
+}
+```
+
+<RouteHeader method="GET" url="/users/{user.id}/badges/{badge_id}">
+  Get User Badge
+</RouteHeader>
+
+Returns a [badge](#badge-object) object for the user. The current user may be specified as `@me`.

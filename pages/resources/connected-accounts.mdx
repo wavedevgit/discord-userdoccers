@@ -493,3 +493,30 @@ Sends a command to connect to a voice call on a console device.
 </RouteHeader>
 
 Cancels a console command. Returns a 204 empty response on success.
+
+<RouteHeader method="POST" url="/connections/{connection.id}/callback/session-handoff">
+  Complete Connection Session Handoff
+</RouteHeader>
+
+Completes a connection session handoff.
+
+###### JSON Params
+
+| Field         | Type   | Description       |
+| ------------- | ------ | ----------------- |
+| state         | string | The state         |
+| code          | string | The code          |
+| openid_params | object | The openid params |
+| iss           | string | The iss           |
+
+<RouteHeader method="GET" url="/connections/{connection.id}/callback/session-handoff">
+  Get Connection Session Handoff Status
+</RouteHeader>
+
+Returns the status of a connection session handoff.
+
+###### Query String Params
+
+| Field | Type   | Description                      |
+| ----- | ------ | -------------------------------- |
+| state | string | The state of the session handoff |

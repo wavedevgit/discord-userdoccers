@@ -1,0 +1,83 @@
+# Scheduled Messages
+
+Scheduled messages are messages queued to be sent at a future timestamp.
+
+### Scheduled Message Object
+
+Represents a message queued to be sent later.
+
+###### Scheduled Message Structure
+
+| Field                | Type                                                                                | Description                                  |
+| -------------------- | ----------------------------------------------------------------------------------- | -------------------------------------------- |
+| user_id              | snowflake                                                                           | The ID of the user who scheduled the message |
+| scheduled_message_id | snowflake                                                                           | The ID of the scheduled message              |
+| send_at_timestamp    | ISO8601 timestamp                                                                   | When the message will be sent                |
+| scheduled_message    | [scheduled message data](#scheduled-message-data-structure) object                  | The message data to send                     |
+| state                | integer                                                                             | The current state of the scheduled message   |
+| attachment_uploads?  | array[[scheduled attachment upload](#scheduled-attachment-upload-structure) object] | Uploaded attachments for the message         |
+
+###### Scheduled Message Data Structure
+
+| Field             | Type                                                                     | Description                                            |
+| ----------------- | ------------------------------------------------------------------------ | ------------------------------------------------------ |
+| channel_id        | snowflake                                                                | The ID of the destination channel                      |
+| content           | string                                                                   | The message content                                    |
+| type              | integer                                                                  | The [type](/resources/message#message-type) of message |
+| flags             | integer                                                                  | The [message flags](/resources/message#message-flags)  |
+| message_reference | ?[message reference](/resources/message#message-reference-object) object | The message reference                                  |
+
+###### Scheduled Attachment Upload Structure
+
+| Field             | Type    | Description                      |
+| ----------------- | ------- | -------------------------------- |
+| filename          | string  | The original filename            |
+| uploaded_filename | string  | The uploaded attachment filename |
+| description?      | ?string | The attachment description       |
+| title?            | ?string | The attachment title             |
+
+## Endpoints
+
+<RouteHeader method="POST" url="/users/@me/scheduled-messages">
+  Create Scheduled Message
+</RouteHeader>
+
+Creates a scheduled message. Returns a [scheduled message](#scheduled-message-object) object on success.
+
+###### JSON Params
+
+| Field               | Type      | Description             |
+| ------------------- | --------- | ----------------------- |
+| channel_id          | snowflake | The ID of the channel   |
+| content             | string    | The content             |
+| scheduled_timestamp | integer   | The scheduled timestamp |
+| flags               | integer   | The flags               |
+| message_reference   | object    | The message reference   |
+| allowed_mentions    | object    | The allowed mentions    |
+| attachments?        | object    | The attachments         |
+
+<RouteHeader method="GET" url="/users/@me/scheduled-messages">
+  List Scheduled Messages
+</RouteHeader>
+
+Returns a list of [scheduled message](#scheduled-message-object) objects.
+
+<RouteHeader method="PATCH" url="/users/@me/scheduled-messages/{scheduled-message.id}">
+  Modify Scheduled Message
+</RouteHeader>
+
+Modifies a scheduled message. Returns the updated [scheduled message](#scheduled-message-object) object on success.
+
+###### JSON Params
+
+| Field               | Type    | Description             |
+| ------------------- | ------- | ----------------------- |
+| scheduled_timestamp | integer | The scheduled timestamp |
+| content             | string  | The content             |
+| flags               | integer | The flags               |
+
+<RouteHeader method="DELETE" url="/users/@me/scheduled-messages/{scheduled-message.id}">
+  Delete Scheduled Message
+</RouteHeader>
+
+Cancels and deletes a scheduled message. Returns a 204 empty response on success.

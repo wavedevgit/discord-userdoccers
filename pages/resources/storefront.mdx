@@ -1,0 +1,392 @@
+# Storefront
+
+Storefront endpoints provide product collections, promotions, pricing, published listings, and application storefront previews.
+
+### Storefront Collection Object
+
+Represents a localized collection of storefront products.
+
+###### Storefront Collection Structure
+
+| Field               | Type                                                           | Description                                   |
+| ------------------- | -------------------------------------------------------------- | --------------------------------------------- |
+| id                  | snowflake                                                      | The ID of the collection                      |
+| application_id      | snowflake                                                      | The ID of the application                     |
+| name                | string                                                         | The name of the collection                    |
+| description         | string                                                         | The description of the collection             |
+| products            | array[[storefront product](#storefront-product-object) object] | The products in the collection                |
+| created_at          | ISO8601 timestamp                                              | When the collection was created               |
+| updated_at          | ISO8601 timestamp                                              | When the collection was last updated          |
+| unpublished_at?     | ISO8601 timestamp                                              | When the collection was unpublished           |
+| unpublish_settings? | [unpublish settings](#unpublish-settings-structure) object     | The collection's scheduled unpublish settings |
+| tenant_metadata     | object                                                         | Tenant-specific presentation metadata         |
+
+###### Unpublish Settings Structure
+
+| Field              | Type              | Description                                        |
+| ------------------ | ----------------- | -------------------------------------------------- |
+| will_unpublish_at? | ISO8601 timestamp | When the collection is scheduled to be unpublished |
+
+### Storefront Product Object
+
+Represents a localized product and its SKUs.
+
+###### Storefront Product Structure
+
+| Field           | Type                                                      | Description                        |
+| --------------- | --------------------------------------------------------- | ---------------------------------- |
+| id              | snowflake                                                 | The ID of the product              |
+| sku_ids         | array[snowflake]                                          | The IDs of the SKUs in the product |
+| name            | string                                                    | The name of the product            |
+| summary         | string                                                    | The summary of the product         |
+| options         | array[[product option](#product-option-structure) object] | The selectable product options     |
+| created_at      | ISO8601 timestamp                                         | When the product was created       |
+| updated_at      | ISO8601 timestamp                                         | When the product was last updated  |
+| skus            | array[[SKU](/resources/store#sku-object) object]          | The SKUs in the product            |
+| tenant_metadata | object                                                    | Tenant-specific product metadata   |
+
+###### Product Option Structure
+
+| Field         | Type          | Description                         |
+| ------------- | ------------- | ----------------------------------- |
+| name          | string        | The name of the product option      |
+| option_values | array[string] | The values available for the option |
+
+###### Example Storefront Product
+
+```json
+{
+  "id": "1422548914485198869",
+  "sku_ids": ["1422548914485198870"],
+  "name": "Crimson Trail",
+  "summary": "A crimson cosmetic trail.",
+  "options": [
+    {
+      "name": "Color",
+      "option_values": ["Crimson"]
+    }
+  ],
+  "created_at": "2026-07-02T11:18:42.120000+00:00",
+  "updated_at": "2026-08-01T09:04:15.800000+00:00",
+  "skus": [],
+  "tenant_metadata": {}
+}
+```
+
+### Social Layer Storefront Object
+
+Represents an application storefront exposed through the Partner SDK.
+
+###### Social Layer Storefront Structure
+
+| Field                     | Type                                                                        | Description                                     |
+| ------------------------- | --------------------------------------------------------------------------- | ----------------------------------------------- |
+| id                        | string                                                                      | The ID of the storefront                        |
+| published_at              | ?ISO8601 timestamp                                                          | When the storefront was published               |
+| application_id            | snowflake                                                                   | The ID of the application                       |
+| title                     | string                                                                      | The title of the storefront                     |
+| logo_asset_id             | snowflake                                                                   | The ID of the logo asset                        |
+| light_theme_logo_asset_id | snowflake                                                                   | The ID of the light theme logo asset            |
+| pages                     | array[[storefront page](#storefront-page-structure) object]                 | The pages in the storefront                     |
+| assets                    | array[object]                                                               | The application assets used by the storefront   |
+| application?              | [application](/resources/application#application-object) object             | The storefront application                      |
+| storefront_pricing?       | object                                                                      | Pricing for the storefront's SKUs               |
+| promotions?               | map[string, [storefront promotion](#storefront-promotion-structure) object] | Promotions keyed by promotion ID                |
+| store_listings?           | array[[store listing](/resources/store#store-listing-object) object]        | Published listings included with the storefront |
+
+###### Storefront Page Structure
+
+| Field        | Type                                                               | Description                           |
+| ------------ | ------------------------------------------------------------------ | ------------------------------------- |
+| title        | string                                                             | The title of the page                 |
+| leaderboard? | [storefront leaderboard](#storefront-leaderboard-structure) object | Leaderboard presentation metadata     |
+| sku_ids      | array[snowflake]                                                   | The IDs of SKUs displayed on the page |
+| sections?    | array[[storefront section](#storefront-section-structure) object]  | Sections displayed on the page        |
+
+###### Storefront Leaderboard Structure
+
+| Field                     | Type      | Description                          |
+| ------------------------- | --------- | ------------------------------------ |
+| title                     | string    | The title of the leaderboard         |
+| description               | string    | The description of the leaderboard   |
+| background_image_asset_id | snowflake | The ID of the background image asset |
+
+###### Storefront Section Structure
+
+| Field   | Type             | Description                    |
+| ------- | ---------------- | ------------------------------ |
+| title   | string           | The title of the section       |
+| sku_ids | array[snowflake] | The IDs of SKUs in the section |
+
+###### Storefront Promotion Structure
+
+| Field       | Type                                                                        | Description                                 |
+| ----------- | --------------------------------------------------------------------------- | ------------------------------------------- |
+| id          | string                                                                      | The ID of the promotion                     |
+| ends_at?    | ?ISO8601 timestamp                                                          | When the promotion ends                     |
+| flavor?     | string                                                                      | The presentation flavor (default `default`) |
+| pdp?        | ?[promotion label](#promotion-label-structure) object                       | Product detail page presentation            |
+| storefront? | ?[promotion storefront label](#promotion-storefront-label-structure) object | Storefront presentation                     |
+| checkout?   | ?[promotion label](#promotion-label-structure) object                       | Checkout presentation                       |
+| vc_stream?  | ?[promotion label](#promotion-label-structure) object                       | Voice stream presentation                   |
+
+###### Promotion Label Structure
+
+| Field   | Type   | Description           |
+| ------- | ------ | --------------------- |
+| label   | string | The displayed label   |
+| tooltip | string | The displayed tooltip |
+| icon    | string | The displayed icon    |
+
+###### Promotion Storefront Label Structure
+
+| Field       | Type   | Description                     |
+| ----------- | ------ | ------------------------------- |
+| header_text | string | The storefront promotion header |
+
+### Storefront Launch Announcement Object
+
+Represents the announcement shown when a social layer storefront launches.
+
+###### Storefront Launch Announcement Structure
+
+| Field                 | Type                                                                   | Description                    |
+| --------------------- | ---------------------------------------------------------------------- | ------------------------------ |
+| application_id        | snowflake                                                              | The ID of the application      |
+| light_theme_logo_url? | ?string                                                                | The light theme logo URL       |
+| dark_theme_logo_url?  | ?string                                                                | The dark theme logo URL        |
+| background_url?       | ?string                                                                | The background image URL       |
+| titles?               | ?array[string]                                                         | The announcement titles        |
+| subtitle?             | ?string                                                                | The announcement subtitle      |
+| features?             | ?array[[announcement feature](#announcement-feature-structure) object] | The announced features         |
+| button_text?          | ?string                                                                | The call-to-action button text |
+
+###### Announcement Feature Structure
+
+| Field     | Type   | Description           |
+| --------- | ------ | --------------------- |
+| asset_url | string | The feature image URL |
+| title     | string | The feature title     |
+| subtitle  | string | The feature subtitle  |
+
+###### Example Storefront Launch Announcement
+
+```json
+{
+  "application_id": "1422548914485198869",
+  "light_theme_logo_url": "https://cdn.example.com/storefront/logo-light.png",
+  "dark_theme_logo_url": "https://cdn.example.com/storefront/logo-dark.png",
+  "background_url": "https://cdn.example.com/storefront/background.png",
+  "titles": ["A new shop has arrived"],
+  "subtitle": "Discover new items for your next session.",
+  "features": [
+    {
+      "asset_url": "https://cdn.example.com/storefront/feature.png",
+      "title": "New cosmetics",
+      "subtitle": "Customize your experience."
+    }
+  ],
+  "button_text": "Explore Shop"
+}
+```
+
+## Endpoints
+
+<RouteHeader method="GET" url="/storefront/collections">
+  List Storefront Collections
+</RouteHeader>
+
+Returns an object containing a `collections` array of [storefront collection](#storefront-collection-object) objects.
+
+###### Query String Params
+
+| Field                            | Type             | Description                                  |
+| -------------------------------- | ---------------- | -------------------------------------------- |
+| collection_ids                   | array[snowflake] | The IDs of the collections to return         |
+| locale                           | string           | The [language](/reference#locales) to return |
+| with_bundled_skus?               | boolean          | Whether bundled SKUs are included            |
+| include_google_sku_ids?          | boolean          | Whether Google Play SKU IDs are included     |
+| include_unpublished_products?    | boolean          | Whether unpublished products are included    |
+| include_unpublished_collections? | boolean          | Whether unpublished collections are included |
+| ignore_cache?                    | boolean          | Whether cached storefront data is ignored    |
+
+<RouteHeader method="GET" url="/storefront/collections/applications">
+  List Storefront Collections For Application
+</RouteHeader>
+
+Returns an object containing a `collections` array of [storefront collection](#storefront-collection-object) objects for an application.
+
+###### Query String Params
+
+| Field                            | Type           | Description                                           |
+| -------------------------------- | -------------- | ----------------------------------------------------- |
+| application_id                   | snowflake      | The ID of the application                             |
+| locale                           | string         | The [language](/reference#locales) to return          |
+| with_bundled_skus?               | boolean        | Whether bundled SKUs are included                     |
+| include_google_sku_ids?          | boolean        | Whether Google Play SKU IDs are included              |
+| include_unpublished_products?    | boolean        | Whether unpublished products are included             |
+| include_unpublished_collections? | boolean        | Whether unpublished collections are included          |
+| ignore_cache?                    | boolean        | Whether cached storefront data is ignored             |
+| sku_types?                       | array[integer] | The [SKU types](/resources/store#sku-type) to include |
+| include_pricing?                 | boolean        | Whether pricing is included                           |
+
+<RouteHeader method="GET" url="/storefront/collections/{collection.id}">
+  Get Storefront Collection
+</RouteHeader>
+
+Returns a [storefront collection](#storefront-collection-object) object.
+
+<RouteHeader method="GET" url="/storefront/products/skus">
+  List Storefront Products By SKU IDs
+</RouteHeader>
+
+Returns an object containing a `products` array of [storefront product](#storefront-product-object) objects.
+
+###### Query String Params
+
+| Field                   | Type             | Description                                  |
+| ----------------------- | ---------------- | -------------------------------------------- |
+| sku_ids                 | array[snowflake] | The IDs of the SKUs to return products for   |
+| locale                  | string           | The [language](/reference#locales) to return |
+| with_bundled_skus?      | boolean          | Whether bundled SKUs are included            |
+| include_google_sku_ids? | boolean          | Whether Google Play SKU IDs are included     |
+| ignore_cache?           | boolean          | Whether cached storefront data is ignored    |
+
+<RouteHeader method="GET" url="/storefront/products/sku/{sku.id}">
+  Get Storefront Product By SKU ID
+</RouteHeader>
+
+Returns a [storefront product](#storefront-product-object) object for a SKU.
+
+<RouteHeader method="GET" url="/storefront/promotions">
+  List Storefront Promotions
+</RouteHeader>
+
+Returns an object containing a `promotions` array of [storefront promotion](#storefront-promotion-structure) objects.
+
+###### Query String Params
+
+| Field                  | Type             | Description                                   |
+| ---------------------- | ---------------- | --------------------------------------------- |
+| application_ids        | array[snowflake] | The IDs of the applications                   |
+| promotion_id_override? | snowflake        | The ID of the promotion to use as an override |
+
+<RouteHeader method="GET" url="/storefront/pricing">
+  Get Storefront Pricing
+</RouteHeader>
+
+Returns storefront pricing for an application or up to 50 SKUs.
+
+###### Query String Params
+
+| Field                  | Type             | Description                                   |
+| ---------------------- | ---------------- | --------------------------------------------- |
+| application_id?        | snowflake        | The ID of the application                     |
+| sku_ids?               | array[snowflake] | The IDs of the SKUs                           |
+| country_code?          | string           | The country code used for pricing             |
+| promotion_id_override? | snowflake        | The ID of the promotion to use as an override |
+
+<RouteHeader method="GET" url="/store/published-listings/skus">
+  List Published Store Listings
+</RouteHeader>
+
+Returns a list of [store listing](/resources/store#store-listing-object) objects for an application.
+
+###### Query String Params
+
+| Field          | Type      | Description               |
+| -------------- | --------- | ------------------------- |
+| application_id | snowflake | The ID of the application |
+
+<RouteHeader method="GET" url="/store/published-listings/skus/{sku.id}">
+  Get Published Store Listing
+</RouteHeader>
+
+Returns a [store listing](/resources/store#store-listing-object) object for a SKU.
+
+<RouteHeader method="GET" url="/store/published-listings/skus/{sku.id}/subscription-plans">
+  List Published Store Listing Subscription Plans
+</RouteHeader>
+
+Returns a list of [subscription plan](/resources/store#subscription-plan-object) objects for a SKU.
+
+###### Query String Params
+
+| Field                | Type      | Description                                               |
+| -------------------- | --------- | --------------------------------------------------------- |
+| country_code?        | string    | The country code used for pricing                         |
+| payment_source_id?   | snowflake | The ID of the payment source                              |
+| include_unpublished? | boolean   | Whether unpublished plans are included                    |
+| revenue_surface?     | string    | The revenue surface requesting the plans                  |
+| payment_gateway?     | integer   | The [payment gateway](/resources/billing#payment-gateway) |
+
+<RouteHeader method="GET" url="/partner-sdk/guilds/{guild.id}/application-storefront">
+  Get Social Layer Storefront By Guild ID
+</RouteHeader>
+
+Returns a [social layer storefront](#social-layer-storefront-object) object for a guild.
+
+<RouteHeader method="GET" url="/partner-sdk/applications/{application.id}/application-storefront">
+  Get Social Layer Storefront By Application ID
+</RouteHeader>
+
+Returns a [social layer storefront](#social-layer-storefront-object) object for an application.
+
+<RouteHeader method="GET" url="/partner-sdk/applications/{application.id}/storefronts/preview">
+  List Social Layer Storefront Previews
+</RouteHeader>
+
+Returns a list of partial [social layer storefront](#social-layer-storefront-object) objects.
+
+<RouteHeader method="GET" url="/partner-sdk/applications/{application.id}/storefront/{storefront.id}/preview">
+  Get Social Layer Storefront Preview
+</RouteHeader>
+
+Returns a [social layer storefront](#social-layer-storefront-object) object.
+
+<RouteHeader method="GET" url="/partner-sdk/applications/{application.id}/storefront/skus/{sku.id}">
+  Get Social Layer Storefront SKU
+</RouteHeader>
+
+Returns a store listing, storefront metadata, and application assets for a social layer storefront SKU.
+
+###### Query String Params
+
+| Field                  | Type      | Description                                               |
+| ---------------------- | --------- | --------------------------------------------------------- |
+| with_google_sku_ids?   | boolean   | Whether Google Play SKU IDs are included                  |
+| country_code?          | string    | The country code used for pricing                         |
+| payment_gateway?       | integer   | The [payment gateway](/resources/billing#payment-gateway) |
+| promotion_id_override? | snowflake | The ID of the promotion to use as an override             |
+
+###### Response Body
+
+| Field                | Type                                                          | Description                            |
+| -------------------- | ------------------------------------------------------------- | -------------------------------------- |
+| store_listing        | [store listing](/resources/store#store-listing-object) object | The listing for the SKU                |
+| storefront_metadata? | object                                                        | Storefront presentation metadata       |
+| assets               | array[object]                                                 | Application assets used by the listing |
+
+<RouteHeader method="POST" url="/partner-sdk/applications/{application.id}/storefront/skus/{sku.id}/eligibility">
+  Create Social Layer SKU Eligibility Check
+</RouteHeader>
+
+Starts an eligibility check for a social layer SKU.
+
+###### Response Body
+
+| Field          | Type   | Description                           |
+| -------------- | ------ | ------------------------------------- |
+| interaction_id | string | The ID of the eligibility interaction |
+
+<RouteHeader method="GET" url="/partner-sdk/guilds/{guild.id}/application-storefront/announcement">
+  Get Social Layer Storefront Announcement
+</RouteHeader>
+
+Returns the storefront announcement for a guild.
+
+<RouteHeader method="GET" url="/partner-sdk/storefront-launch-announcement">
+  Get Social Layer Storefront Launch Announcement
+</RouteHeader>
+
+Returns a nullable [storefront launch announcement](#storefront-launch-announcement-object) object.

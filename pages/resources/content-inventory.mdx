@@ -1,0 +1,89 @@
+# Content Inventory
+
+Content inventory records applications, games, music, and outbox entries associated with users.
+
+### Content Inventory Object
+
+A content inventory contains entries and fetch state for a user's inventory.
+
+###### Content Inventory Structure
+
+| Field                     | Type    | Description                                                              |
+| ------------------------- | ------- | ------------------------------------------------------------------------ |
+| wait_ms_until_next_fetch? | integer | The number of milliseconds before the inventory may be fetched again     |
+| refresh_token?            | string  | The token that may be passed to a later request to refresh the inventory |
+
+The client consumes additional inventory entry collections from this object without imposing a fixed response schema.
+
+### Similar Games Object
+
+A similar games object contains application IDs related to an application.
+
+###### Similar Games Structure
+
+| Field         | Type             | Description                          |
+| ------------- | ---------------- | ------------------------------------ |
+| similar_games | array[snowflake] | The IDs of similar game applications |
+
+###### Example Similar Games
+
+```json
+{
+  "similar_games": ["1107262924474323006", "1282012045544034304"]
+}
+```
+
+## Endpoints
+
+<RouteHeader method="GET" url="/content-inventory/users/@me">
+  Get My Content Inventory
+</RouteHeader>
+
+Returns a [content inventory](#content-inventory-object) object for the current user.
+
+###### Query String Params
+
+| Field             | Type    | Description                                                    |
+| ----------------- | ------- | -------------------------------------------------------------- |
+| refresh_token?    | string  | A token from an earlier response used to refresh the inventory |
+| for_game_profile? | boolean | Whether to return inventory data for a game profile            |
+| feature?          | string  | The client feature requesting the inventory                    |
+
+<RouteHeader method="PATCH" url="/content-inventory/users/@me/applications/{application.id}">
+  Modify My Content Inventory Application
+</RouteHeader>
+
+Modifies sharing for the current user's content-inventory record for an application.
+
+###### JSON Params
+
+| Field      | Type    | Description                                    |
+| ---------- | ------- | ---------------------------------------------- |
+| is_sharing | boolean | Whether activity for the application is shared |
+
+###### Example JSON Params
+
+```json
+{
+  "is_sharing": true
+}
+```
+
+<RouteHeader method="GET" url="/content-inventory/users/@me/similar-games/{application.id}">
+  List Similar Games
+</RouteHeader>
+
+Returns a [similar games](#similar-games-object) object for the application.
+
+<RouteHeader method="POST" url="/content-inventory/users/@me/spotify">
+  Update Spotify Content Inventory
+</RouteHeader>
+
+Updates the current user's Spotify content inventory.
+
+###### JSON Params
+
+| Field         | Type          | Description                                                            |
+| ------------- | ------------- | ---------------------------------------------------------------------- |
+| connection_id | snowflake     | The ID of the Spotify connection                                       |
+| tracks        | array[object] | The listened tracks; the client submits one track without reshaping it |

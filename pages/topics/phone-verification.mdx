@@ -120,6 +120,18 @@ Providing the `phone` parameter will send a verification code to the phone numbe
 | password?            | string | The user's current password; if the account does not have a password, this sets it               |
 | change_phone_reason? | string | The [reason](#change-phone-reason) for adding a phone number                                     |
 
+<RouteHeader method="POST" url="/users/@me/phone/verify">
+  Verify Phone Number Without Password
+</RouteHeader>
+
+Verifies the code sent to the current user's phone number without requiring the account password.
+
+###### JSON Params
+
+| Field | Type   | Description               |
+| ----- | ------ | ------------------------- |
+| code  | string | The code received via SMS |
+
 <RouteHeader method="DELETE" url="/users/@me/phone" mfa>
   Remove Phone Number
 </RouteHeader>
@@ -132,3 +144,15 @@ Removes the phone number from the current user. Returns a 204 empty response on 
 | ------------------- | ------ | ---------------------------------------------------------------------------------- |
 | password            | string | The user's current password; if the account does not have a password, this sets it |
 | change_phone_reason | string | The [removal reason](#change-phone-reason)                                         |
+
+<RouteHeader method="POST" url="/phone-verifications/validate-support-ticket">
+  Validate Phone Support Ticket
+</RouteHeader>
+
+Validates a phone support ticket.
+
+###### JSON Params
+
+| Field | Type   | Description              |
+| ----- | ------ | ------------------------ |
+| token | string | The phone support ticket |

@@ -1,0 +1,177 @@
+# Wishlists
+
+Wishlists contain store SKUs saved by users and control how saved items are shared.
+
+### Wishlist Object
+
+A user's store wishlist.
+
+###### Wishlist Structure
+
+| Field               | Type                                                                   | Description                                |
+| ------------------- | ---------------------------------------------------------------------- | ------------------------------------------ |
+| id                  | snowflake                                                              | The ID of the wishlist                     |
+| user_id             | snowflake                                                              | The ID of the user who owns the wishlist   |
+| wishlist_items      | array[[wishlist item](#wishlist-item-structure) object]                | The items in the wishlist                  |
+| storefront_pricing? | array[object]                                                          | Storefront pricing for the wishlist's SKUs |
+| visibility          | integer                                                                | The [visibility](#wishlist-visibility)     |
+| applications?       | array[[application](/resources/application#application-object) object] | Applications referenced by wishlist items  |
+
+###### Wishlist Visibility
+
+| Value | Name    | Description                                    |
+| ----- | ------- | ---------------------------------------------- |
+| 0     | PRIVATE | The wishlist is only visible to its owner      |
+| 1     | PUBLIC  | The wishlist is visible on the owner's profile |
+
+###### Wishlist Item Structure
+
+| Field              | Type                                                                         | Description                                                      |
+| ------------------ | ---------------------------------------------------------------------------- | ---------------------------------------------------------------- |
+| sku_id             | snowflake                                                                    | The ID of the SKU                                                |
+| sku_product_line   | integer                                                                      | The [product line](/resources/store#sku-product-line) of the SKU |
+| sku_name           | string                                                                       | The name of the SKU                                              |
+| is_owned           | boolean                                                                      | Whether the wishlist owner owns the SKU                          |
+| gifter_user_id?    | ?snowflake                                                                   | The ID of the user who gifted the SKU                            |
+| sku?               | [SKU](/resources/store#sku-object) object                                    | The SKU                                                          |
+| collectibles_item? | [collectible](/resources/collectibles#collectible-item-object) object        | The collectible represented by the item                          |
+| bundle_items?      | array[[collectible](/resources/collectibles#collectible-item-object) object] | The collectibles represented by a bundle                         |
+
+Collectible wishlist items contain either `collectibles_item` or `bundle_items`.
+
+###### Example Wishlist
+
+```json
+{
+  "id": "1415376298170224701",
+  "user_id": "852892297661906993",
+  "wishlist_items": [
+    {
+      "sku_id": "1212569433834881034",
+      "sku_product_line": 7,
+      "sku_name": "Midnight Glow",
+      "is_owned": false,
+      "gifter_user_id": null,
+      "collectibles_item": {
+        "type": 1,
+        "sku_id": "1212569433834881034"
+      }
+    }
+  ],
+  "visibility": 1,
+  "applications": []
+}
+```
+
+### Wishlist Recommendations Object
+
+Recommendations for gifting wishlist items.
+
+###### Wishlist Recommendations Structure
+
+| Field                   | Type                                                                   | Description                                              |
+| ----------------------- | ---------------------------------------------------------------------- | -------------------------------------------------------- |
+| skus                    | array[[SKU](/resources/store#sku-object) object]                       | The recommended SKUs                                     |
+| skus_to_user_and_reason | map[snowflake, object]                                                 | A mapping of SKU IDs to recommendation recipient details |
+| applications            | array[[application](/resources/application#application-object) object] | Applications referenced by the recommended SKUs          |
+| storefront_pricing?     | array[object]                                                          | Storefront pricing for the recommended SKUs              |
+
+## Endpoints
+
+<RouteHeader method="GET" url="/wishlists/{wishlist_id}">
+  Get Wishlist
+</RouteHeader>
+
+Returns a [wishlist](#wishlist-object) object.
+
+###### Query String Params
+
+| Field            | Type   | Description                                                             |
+| ---------------- | ------ | ----------------------------------------------------------------------- |
+| source?          | string | The source of the request (default `USER_PROFILE`)                      |
+| country_code?    | string | The ISO 3166-1 alpha-2 country code used for pricing                    |
+| payment_gateway? | string | The mobile payment gateway used for pricing, either `google` or `apple` |
+
+<RouteHeader method="PATCH" url="/users/@me/wishlists/{wishlist_id}">
+  Modify User Wishlist
+</RouteHeader>
+
+Modifies the current user's wishlist visibility. Returns the updated [wishlist](#wishlist-object) object on success.
+
+###### JSON Params
+
+| Field            | Type    | Description                                                             |
+| ---------------- | ------- | ----------------------------------------------------------------------- |
+| visibility       | integer | The [wishlist visibility](#wishlist-visibility)                         |
+| country_code?    | string  | The ISO 3166-1 alpha-2 country code used for pricing                    |
+| payment_gateway? | string  | The mobile payment gateway used for pricing, either `google` or `apple` |
+
+<RouteHeader method="POST" url="/users/@me/wishlist/items">
+  Add Wishlist Item
+</RouteHeader>
+
+Adds a SKU to the current user's wishlist. Returns the updated [wishlist](#wishlist-object) object on success.
+
+###### JSON Params
+
+| Field            | Type      | Description                                                             |
+| ---------------- | --------- | ----------------------------------------------------------------------- |
+| sku_id           | snowflake | The ID of the SKU                                                       |
+| country_code?    | string    | The ISO 3166-1 alpha-2 country code used for pricing                    |
+| payment_gateway? | string    | The mobile payment gateway used for pricing, either `google` or `apple` |
+
+<RouteHeader method="DELETE" url="/users/@me/wishlists/{wishlist_id}/items/{sku.id}">
+  Delete User Wishlist Item
+</RouteHeader>
+
+Removes the SKU from the current user's wishlist. Returns the updated [wishlist](#wishlist-object) object on success.
+
+###### Query String Params
+
+| Field            | Type   | Description                                                             |
+| ---------------- | ------ | ----------------------------------------------------------------------- |
+| country_code?    | string | The ISO 3166-1 alpha-2 country code used for pricing                    |
+| payment_gateway? | string | The mobile payment gateway used for pricing, either `google` or `apple` |
+
+<RouteHeader method="PATCH" url="/users/@me/wishlists/{wishlist_id}/items/{sku.id}">
+  Modify User Wishlist Item
+</RouteHeader>
+
+Reorders a SKU in the current user's wishlist. Returns the updated [wishlist](#wishlist-object) object on success.
+
+###### JSON Params
+
+| Field            | Type      | Description                                                             |
+| ---------------- | --------- | ----------------------------------------------------------------------- |
+| previous_sku_id? | snowflake | The ID of the SKU to place before this SKU                              |
+| next_sku_id?     | snowflake | The ID of the SKU to place after this SKU                               |
+| country_code?    | string    | The ISO 3166-1 alpha-2 country code used for pricing                    |
+| payment_gateway? | string    | The mobile payment gateway used for pricing, either `google` or `apple` |
+
+<RouteHeader method="GET" url="/wishlist/gift-recommendations">
+  List User Wishlist Recommendations
+</RouteHeader>
+
+Returns a [wishlist recommendations](#wishlist-recommendations-object) object.
+
+###### Query String Params
+
+| Field                | Type             | Description                                                  |
+| -------------------- | ---------------- | ------------------------------------------------------------ |
+| application_ids      | array[snowflake] | The application IDs to include                               |
+| user_ids             | array[snowflake] | The user IDs to include                                      |
+| max_recommendations? | integer          | The maximum number of recommendations to return (default 20) |
+| localize?            | boolean          | Whether to localize the recommendations (default true)       |
+| country_code?        | string           | The ISO 3166-1 alpha-2 country code used for pricing         |
+| payment_gateway?     | string           | The mobile payment gateway used for pricing                  |
+
+###### Example Response
+
+```json
+{
+  "skus": [],
+  "skus_to_user_and_reason": {},
+  "applications": [],
+  "storefront_pricing": []
+}
+```

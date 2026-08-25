@@ -2281,3 +2281,39 @@ Returns a reason for why an application cannot be deleted.
 | ---------- | -------- | ----------------------------------------------------------------------------------- |
 | deletable? | ?boolean | Whether the application is deletable (default false)                                |
 | reason?    | ?integer | The [reason](#application-undeletable-reason) why the application cannot be deleted |
+
+<RouteHeader method="POST" url="/networking/token">
+  Create Networking Token
+</RouteHeader>
+
+Creates a short-lived networking token.
+
+###### Response Body
+
+| Field | Type   | Description                      |
+| ----- | ------ | -------------------------------- |
+| token | string | The short-lived networking token |
+
+<RouteHeader method="GET" url="/applications/{application.id}/trusted-links/check">
+  List Activities Trusted Links
+</RouteHeader>
+
+Returns whether the URL is trusted for the application.
+
+###### Query String Params
+
+| Field | Type   | Description      |
+| ----- | ------ | ---------------- |
+| url   | string | The URL to check |
+
+###### Response Body
+
+| Field   | Type    | Description                |
+| ------- | ------- | -------------------------- |
+| trusted | boolean | Whether the URL is trusted |
+
+<RouteHeader method="POST" url="/applications/{application.id}/proxy-tickets">
+  Create Application Proxy Ticket
+</RouteHeader>
+
+Creates a short-lived proxy ticket for an application. Returns an object containing a `ticket` string.

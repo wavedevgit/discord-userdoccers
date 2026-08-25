@@ -1013,3 +1013,56 @@ Sends a multi-factor authentication code to the user's phone number for verifica
 ```json
 { "phone": "+*******0085" }
 ```
+
+### Generated User Pool Object
+
+A pool of generated test users.
+
+###### Generated User Pool Structure
+
+| Field    | Type             | Description                              |
+| -------- | ---------------- | ---------------------------------------- |
+| pool_id  | snowflake        | The ID of the generated user pool        |
+| summary  | string           | A summary of the generated user pool     |
+| user_ids | array[snowflake] | The IDs of users generated for this pool |
+
+<RouteHeader method="GET" url="/generated-pools/{generated_pool_id}">
+  Get Generated Pool By ID
+</RouteHeader>
+
+Returns a generated user pool and its generated users.
+
+###### Response Body
+
+| Field          | Type                                                      | Description                      |
+| -------------- | --------------------------------------------------------- | -------------------------------- |
+| generated_pool | [generated user pool](#generated-user-pool-object) object | The generated user pool          |
+| users          | array[partial [user](/resources/user#user-object) object] | The users generated for the pool |
+
+###### Example Response
+
+```json
+{
+  "generated_pool": {
+    "pool_id": "1415383903267254323",
+    "summary": "Voice onboarding test accounts",
+    "user_ids": ["1415384020053323878", "1415384087523082301"]
+  },
+  "users": [
+    {
+      "id": "1415384020053323878",
+      "username": "generated_alien_1",
+      "global_name": "Generated Alien 1",
+      "discriminator": "0",
+      "avatar": null
+    },
+    {
+      "id": "1415384087523082301",
+      "username": "generated_alien_2",
+      "global_name": "Generated Alien 2",
+      "discriminator": "0",
+      "avatar": null
+    }
+  ]
+}
+```

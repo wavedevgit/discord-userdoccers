@@ -1,0 +1,144 @@
+# Game Servers
+
+Game servers are managed game-hosting instances associated with a guild and the current user's subscription.
+
+### Game Server Object
+
+A game server is a provisioned game-hosting instance.
+
+###### Game Server Structure
+
+| Field             | Type      | Description                                          |
+| ----------------- | --------- | ---------------------------------------------------- |
+| id                | string    | The ID of the game server                            |
+| name              | string    | The name of the game server                          |
+| region_id         | string    | The ID of the server region                          |
+| region_name       | string    | The name of the server region                        |
+| sku_id            | snowflake | The ID of the game-server plan SKU                   |
+| plan_name         | string    | The name of the game-server plan                     |
+| players_count?    | integer   | The number of connected players (default 0)          |
+| max_players_count | integer   | The maximum number of connected players              |
+| ip                | string    | The server's IP address                              |
+| port              | string    | The server's port                                    |
+| entitlement_id    | snowflake | The ID of the entitlement for the server             |
+| subscription_id   | snowflake | The ID of the subscription for the server            |
+| provider_type     | string    | The game-server provider                             |
+| provider_url      | string    | The URL of the provider's management panel           |
+| status            | string    | The [status of the game server](#game-server-status) |
+| game_id           | snowflake | The ID of the game application                       |
+| game_config?      | object    | Provider-specific game configuration                 |
+
+###### Example Game Server
+
+```json
+{
+  "id": "srv_8b537cd61f1d",
+  "name": "Community Survival",
+  "region_id": "us-east",
+  "region_name": "US East",
+  "sku_id": "1484189274013384704",
+  "plan_name": "Starter",
+  "players_count": 3,
+  "max_players_count": 20,
+  "ip": "203.0.113.42",
+  "port": "25565",
+  "entitlement_id": "1484190046798852096",
+  "subscription_id": "1484190524808634368",
+  "provider_type": "shockbyte",
+  "provider_url": "https://example.com/servers/srv_8b537cd61f1d",
+  "status": "online",
+  "game_id": "1484188636179095552",
+  "game_config": {}
+}
+```
+
+###### Game Server Status
+
+| Value            | Description                            |
+| ---------------- | -------------------------------------- |
+| starting         | The server is starting                 |
+| startup_failed   | The server failed to start             |
+| missing_stock    | The provider has no available capacity |
+| sleeping         | The server is sleeping                 |
+| offline          | The server is offline                  |
+| online           | The server is online                   |
+| deleted          | The server was deleted                 |
+| provider_errored | The provider returned an error         |
+
+### Game Server Region Object
+
+A game server region is a provider location where a server can be created.
+
+###### Game Server Region Structure
+
+| Field        | Type    | Description                          |
+| ------------ | ------- | ------------------------------------ |
+| id           | string  | The ID of the region                 |
+| name         | string  | The name of the region               |
+| country_code | string  | The region's country code            |
+| ping_url     | string  | The URL used to measure latency      |
+| enabled      | boolean | Whether servers can be created there |
+
+## Endpoints
+
+<RouteHeader method="GET" url="/guilds/{guild.id}/game-servers">
+  List Guild Game Servers
+</RouteHeader>
+
+Returns a list of [game server](#game-server-object) objects for the guild.
+
+<RouteHeader method="GET" url="/guilds/{guild.id}/game-server-regions">
+  List Guild Game Server Regions
+</RouteHeader>
+
+Returns a list of [game server region](#game-server-region-object) objects available to the guild.
+
+<RouteHeader method="GET" url="/users/@me/game-server-regions">
+  List Current User Game Server Regions
+</RouteHeader>
+
+Returns the game-server regions and creation availability for the current user.
+
+###### Response Body
+
+| Field             | Type                                                           | Description                                     |
+| ----------------- | -------------------------------------------------------------- | ----------------------------------------------- |
+| regions           | array[[game server region](#game-server-region-object) object] | The available game-server regions               |
+| creation_disabled | boolean                                                        | Whether the current user cannot create a server |
+
+<RouteHeader method="GET" url="/users/@me/game-servers">
+  List Current User Game Servers
+</RouteHeader>
+
+Returns the current user's game servers and server limit.
+
+###### Response Body
+
+| Field            | Type                                             | Description                                |
+| ---------------- | ------------------------------------------------ | ------------------------------------------ |
+| game_servers     | array[[game server](#game-server-object) object] | The current user's game servers            |
+| max_game_servers | integer                                          | The maximum number of game servers allowed |
+
+<RouteHeader method="PATCH" url="/users/@me/game-servers/{game_server.id}">
+  Modify Current User Game Server
+</RouteHeader>
+
+Modifies the name of a game server.
+
+###### JSON Params
+
+| Field | Type   | Description                 |
+| ----- | ------ | --------------------------- |
+| name  | string | The name of the game server |
+
+<RouteHeader method="POST" url="/users/@me/game-servers/{game_server.id}/wake">
+  Wake Current User Game Server
+</RouteHeader>
+
+Wakes a sleeping game server. Returns the updated [game server](#game-server-object) object on success.
+
+<RouteHeader method="POST" url="/guilds/{guild.id}/game-servers/{game_server.id}/wake">
+  Wake Guild Game Server
+</RouteHeader>
+
+Wakes a sleeping game server for the guild. Returns the updated [game server](#game-server-object) object on success.

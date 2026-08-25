@@ -1,0 +1,78 @@
+# Telemetry
+
+Telemetry endpoints submit science events and aggregated metrics.
+
+### Metric Object
+
+A metric records a count or distribution sample.
+
+###### Metric Structure
+
+| Field  | Type          | Description                                              |
+| ------ | ------------- | -------------------------------------------------------- |
+| name   | string        | The metric name                                          |
+| type   | string        | The [metric type](#metric-type)                          |
+| tags   | array[string] | Tags in `name:value` format                              |
+| value? | number        | The distribution value; present for distribution metrics |
+
+###### Metric Type
+
+| Value        | Description           |
+| ------------ | --------------------- |
+| count        | A count increment     |
+| distribution | A distribution sample |
+
+###### Example Metric
+
+```json
+{
+  "name": "app.open_latency",
+  "type": "distribution",
+  "tags": ["design_id:tabs_ia", "platform:web", "release_channel:canary"],
+  "value": 184.5
+}
+```
+
+### Metrics Client Info Object
+
+Metrics client information identifies the client build that produced a batch.
+
+###### Metrics Client Info Structure
+
+| Field        | Type   | Description                                |
+| ------------ | ------ | ------------------------------------------ |
+| built_at     | string | The client build timestamp in milliseconds |
+| build_number | string | The client build number                    |
+
+## Endpoints
+
+<RouteHeader method="POST" url="/metrics/v2">
+  Submit Metrics v2
+</RouteHeader>
+
+Submits a batch of up to 100 metrics.
+
+###### JSON Params
+
+| Field       | Type                                                      | Description                        |
+| ----------- | --------------------------------------------------------- | ---------------------------------- |
+| metrics     | array[[metric](#metric-object) object]                    | The metrics in the batch           |
+| client_info | [metrics client info](#metrics-client-info-object) object | Information about the client build |
+
+###### Example JSON Params
+
+```json
+{
+  "metrics": [
+    {
+      "name": "app.open",
+      "type": "count",
+      "tags": ["design_id:tabs_ia", "platform:web", "release_channel:canary"]
+    }
+  ],
+  "client_info": {
+    "built_at": "1781640804075",
+    "build_number": "564083"
+  }
+}
+```

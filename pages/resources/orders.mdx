@@ -1,0 +1,190 @@
+# Orders
+
+Orders represent in-progress purchases, their line items, billing details, signing state, and resulting entitlements.
+
+### Order Object
+
+Represents an in-progress store order.
+
+###### Order Structure
+
+| Field                    | Type                                                        | Description                                            |
+| ------------------------ | ----------------------------------------------------------- | ------------------------------------------------------ |
+| id                       | string                                                      | The ID of the order                                    |
+| status                   | integer                                                     | The [status of the order](#order-status)               |
+| revision                 | integer                                                     | The revision used for optimistic updates               |
+| order_line_items         | array[[order line item](#order-line-item-structure) object] | The line items in the order                            |
+| billing_facet?           | [billing facet](#billing-facet-structure) object            | The billing details for the order                      |
+| external_gateway_facet?  | object                                                      | Billing details managed by an external payment gateway |
+| gifting_facet?           | [gifting facet](#gifting-facet-structure) object            | Gift details for the order                             |
+| subscription_facet?      | object                                                      | Subscription details for the order                     |
+| checkout_context?        | object                                                      | Additional checkout context                            |
+| created_at               | ISO8601 timestamp                                           | When the order was created                             |
+| unsatisfied_constraints? | array[object]                                               | Constraints that prevent the order from being signed   |
+
+###### Order Status
+
+| Value | Name                | Description                        |
+| ----- | ------------------- | ---------------------------------- |
+| 0     | UNSPECIFIED         | The order status is unspecified    |
+| 1     | DRAFT               | The order is open for modification |
+| 2     | SIGNED              | The order has been signed          |
+| 3     | DISCARDED           | The order has been discarded       |
+| 4     | SIGNING_IN_PROGRESS | The order is being signed          |
+| 5     | SIGNING_FAILED      | The order could not be signed      |
+
+###### Order Line Item Structure
+
+| Field                 | Type      | Description                                                       |
+| --------------------- | --------- | ----------------------------------------------------------------- |
+| id                    | string    | The ID of the line item                                           |
+| sku_id                | snowflake | The ID of the SKU                                                 |
+| quantity              | integer   | The quantity of the SKU                                           |
+| purchase_type         | integer   | The [purchase type](#order-line-item-purchase-type)               |
+| subscription_plan_id? | snowflake | The ID of the subscription plan used for a subscription line item |
+
+###### Order Line Item Purchase Type
+
+| Value | Name         | Description                                     |
+| ----- | ------------ | ----------------------------------------------- |
+| 0     | UNSPECIFIED  | The purchase type is unspecified                |
+| 1     | ONE_TIME     | The line item is purchased once                 |
+| 2     | SUBSCRIPTION | The line item creates or updates a subscription |
+
+###### Billing Facet Structure
+
+| Field              | Type                                                | Description                                               |
+| ------------------ | --------------------------------------------------- | --------------------------------------------------------- |
+| payment_gateway    | integer                                             | The [payment gateway](/resources/billing#payment-gateway) |
+| payment_source_id? | ?snowflake                                          | The ID of the payment source                              |
+| invoice_preview?   | [invoice](/resources/payment#invoice-object) object | The invoice preview calculated for the order              |
+
+###### Gifting Facet Structure
+
+| Field               | Type                                                       | Description                 |
+| ------------------- | ---------------------------------------------------------- | --------------------------- |
+| is_gift             | boolean                                                    | Whether the order is a gift |
+| gift_customization? | [gift customization](#gift-customization-structure) object | Customization for the gift  |
+
+###### Gift Customization Structure
+
+| Field                    | Type             | Description                                 |
+| ------------------------ | ---------------- | ------------------------------------------- |
+| recipient_id?            | snowflake        | The ID of the gift recipient                |
+| gift_style?              | integer          | The style of the gift                       |
+| emoji_id?                | ?snowflake       | The ID of the custom emoji                  |
+| emoji_name?              | ?string          | The name of the standard emoji              |
+| sound_id?                | ?snowflake       | The ID of the sound attached to the gift    |
+| reward_sku_ids?          | array[snowflake] | The IDs of reward SKUs included in the gift |
+| custom_message_contents? | string           | The custom message attached to the gift     |
+
+###### Example Order
+
+```json
+{
+  "id": "01JYJ6R5H47VQ9C2M8P3A6N1TK",
+  "status": 1,
+  "revision": 2,
+  "order_line_items": [
+    {
+      "id": "01JYJ6R6ETTQZB71W0E7P9M4YH",
+      "sku_id": "1422548914485198869",
+      "quantity": 1,
+      "purchase_type": 1
+    }
+  ],
+  "billing_facet": {
+    "payment_gateway": 1,
+    "payment_source_id": "1422548914485198870"
+  },
+  "created_at": "2026-08-12T14:22:31.450000+00:00",
+  "unsatisfied_constraints": []
+}
+```
+
+## Endpoints
+
+<RouteHeader method="GET" url="/billing/orders/{order.id}">
+  Get Order
+</RouteHeader>
+
+Returns an [order](#order-object) object.
+
+<RouteHeader method="POST" url="/billing/orders">
+  Create Order
+</RouteHeader>
+
+Creates a new order. Returns the new [order](#order-object) object on success.
+
+###### JSON Params
+
+| Field              | Type                                                                | Description                           |
+| ------------------ | ------------------------------------------------------------------- | ------------------------------------- |
+| order_line_items   | array[partial [order line item](#order-line-item-structure) object] | The line items to add to the order    |
+| billing_facet      | partial [billing facet](#billing-facet-structure) object            | The billing details for the order     |
+| application_facet? | [application facet](#application-facet-structure) object            | Application-specific order details    |
+| location_facet?    | [location facet](#location-facet-structure) object                  | Location details used during checkout |
+| gifting_facet?     | [gifting facet](#gifting-facet-structure) object                    | Gift details for the order            |
+
+Only `sku_id`, `quantity`, and `purchase_type` are supplied for each line item when creating an order.
+
+###### Application Facet Structure
+
+| Field     | Type    | Description                                          |
+| --------- | ------- | ---------------------------------------------------- |
+| test_mode | boolean | Whether the order is for an application in test mode |
+
+###### Location Facet Structure
+
+| Field                        | Type   | Description                                       |
+| ---------------------------- | ------ | ------------------------------------------------- |
+| request_gateway_country_code | string | The country code selected for the payment gateway |
+
+<RouteHeader method="GET" url="/billing/orders">
+  List Orders
+</RouteHeader>
+
+Returns a list of [order](#order-object) objects.
+
+###### Query String Params
+
+| Field  | Type    | Description                            |
+| ------ | ------- | -------------------------------------- |
+| limit? | integer | The maximum number of orders to return |
+
+<RouteHeader method="PATCH" url="/billing/orders/{order.id}">
+  Modify Order
+</RouteHeader>
+
+Modifies an order. Returns the updated [order](#order-object) object on success.
+
+###### JSON Params
+
+| Field              | Type                                                     | Description                               |
+| ------------------ | -------------------------------------------------------- | ----------------------------------------- |
+| billing_facet?     | partial [billing facet](#billing-facet-structure) object | The updated billing details               |
+| expected_revision? | integer                                                  | The revision the caller expects to modify |
+
+<RouteHeader method="POST" url="/billing/orders/{order.id}/sign">
+  Sign Order
+</RouteHeader>
+
+Signs the order. Returns the signed [order](#order-object) object on success. If the order has unsatisfied constraints, the API may return the order object in a 400 response.
+
+###### JSON Params
+
+| Field              | Type    | Description                             |
+| ------------------ | ------- | --------------------------------------- |
+| expected_revision? | integer | The revision the caller expects to sign |
+
+<RouteHeader method="POST" url="/billing/orders/{order.id}/discard">
+  Discard Order
+</RouteHeader>
+
+Discards the order. Returns the discarded [order](#order-object) object on success.
+
+<RouteHeader method="GET" url="/billing/orders/{order.id}/entitlements">
+  List Order Entitlements
+</RouteHeader>
+
+Returns a list of [entitlement](/resources/entitlement#entitlement-object) objects created for the order.

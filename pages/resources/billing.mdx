@@ -231,6 +231,20 @@ The values of this enum are currently unknown. Help us by figuring them out and 
 
 ## Endpoints
 
+<RouteHeader method="GET" url="/{resource.id}/billing/premium/subscribe/login-handoff">
+  Get Standalone Checkout Login Handoff
+</RouteHeader>
+
+Returns the login handoff for a standalone premium checkout.
+
+###### Query String Params
+
+| Field         | Type   | Description                         |
+| ------------- | ------ | ----------------------------------- |
+| handoff_key   | string | The checkout handoff key            |
+| handoff_token | string | The checkout handoff token          |
+| destination   | string | The destination to open after login |
+
 <RouteHeader method="GET" url="/users/@me/billing/country-code">
   Get Billing Country Code
 </RouteHeader>
@@ -333,6 +347,8 @@ Deletes a payment source. Returns a 204 empty response on success. Fires a [User
 </RouteHeader>
 
 Validates a billing address.
+
+###### JSON Params
 
 | Field           | Type                                                 | Description                     |
 | --------------- | ---------------------------------------------------- | ------------------------------- |
@@ -584,3 +600,36 @@ Returns a list of guild IDs eligible for an application guild subscription.
 | -------------- | --------- | ------------------------------------------------------- |
 | application_id | snowflake | The ID of the application the subscription belongs to   |
 | sku_id?        | snowflake | The ID of the application subscription SKU to check for |
+
+<RouteHeader method="POST" url="/billing/gift-card/view">
+  View Gift Card
+</RouteHeader>
+
+Returns the gift card details.
+
+###### JSON Params
+
+| Field | Type   | Description       |
+| ----- | ------ | ----------------- |
+| pin   | string | The gift card PIN |
+
+<RouteHeader method="POST" url="/billing/gift-card/redeem">
+  Redeem Gift Card
+</RouteHeader>
+
+Redeems a gift card.
+
+###### JSON Params
+
+| Field        | Type   | Description              |
+| ------------ | ------ | ------------------------ |
+| pin          | string | The gift card PIN        |
+| postal_code  | string | The billing postal code  |
+| country_code | string | The billing country code |
+
+###### Response Body
+
+| Field    | Type    | Description                                 |
+| -------- | ------- | ------------------------------------------- |
+| amount   | integer | The amount redeemed in minor currency units |
+| currency | string  | The lowercase ISO 4217 currency code        |

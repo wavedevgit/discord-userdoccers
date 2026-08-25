@@ -1,0 +1,146 @@
+# Gravity
+
+Gravity provides recommended guilds, channels, messages, activities, and topics.
+
+### Dehydrated Gravity Feed Object
+
+A dehydrated Gravity feed identifies feed items that can be hydrated separately.
+
+###### Dehydrated Gravity Feed Structure
+
+| Field   | Type          | Description               |
+| ------- | ------------- | ------------------------- |
+| items   | array[object] | The dehydrated feed items |
+| load_id | string        | The ID of the feed load   |
+
+### Hydrated Gravity Feed Object
+
+A hydrated Gravity feed contains resolved message and activity items.
+
+###### Hydrated Gravity Feed Structure
+
+| Field          | Type          | Description                 |
+| -------------- | ------------- | --------------------------- |
+| message_items  | array[object] | The hydrated message items  |
+| activity_items | array[object] | The hydrated activity items |
+
+### Gravity Message Item Reference Object
+
+A Gravity message item reference identifies a message to hydrate.
+
+###### Gravity Message Item Reference Structure
+
+| Field      | Type      | Description                     |
+| ---------- | --------- | ------------------------------- |
+| channel_id | snowflake | The ID of the message's channel |
+| message_id | snowflake | The ID of the message           |
+
+### Gravity Guild List Object
+
+A Gravity guild list contains guilds recommended by Gravity.
+
+###### Gravity Guild List Structure
+
+| Field  | Type          | Description            |
+| ------ | ------------- | ---------------------- |
+| guilds | array[object] | The recommended guilds |
+
+## Endpoints
+
+<RouteHeader method="GET" url="/users/@me/gravity-icymi">
+  List Dehydrated Gravity Items
+</RouteHeader>
+
+Returns a [dehydrated Gravity feed](#dehydrated-gravity-feed-object) object.
+
+###### Query String Params
+
+| Field    | Type    | Description                       |
+| -------- | ------- | --------------------------------- |
+| refresh? | boolean | Whether to force a refreshed feed |
+
+###### Example Response
+
+```json
+{
+  "items": [],
+  "load_id": "01J56PZ5RB9XQV3BWYMKJ7DQ94"
+}
+```
+
+<RouteHeader method="GET" url="/gravity-recommended-guilds">
+  List Gravity Recommended Guilds
+</RouteHeader>
+
+Returns a [Gravity guild list](#gravity-guild-list-object) object.
+
+<RouteHeader method="POST" url="/gravity-content">
+  Hydrate Gravity Items
+</RouteHeader>
+
+Hydrates Gravity message and activity item references. Returns a [hydrated Gravity feed](#hydrated-gravity-feed-object) object on success.
+
+###### JSON Params
+
+| Field          | Type                                                                                   | Description                             |
+| -------------- | -------------------------------------------------------------------------------------- | --------------------------------------- |
+| message_items  | array[[Gravity message item reference](#gravity-message-item-reference-object) object] | The message references to hydrate       |
+| activity_items | array[object]                                                                          | The activity item references to hydrate |
+
+###### Example JSON Params
+
+```json
+{
+  "message_items": [
+    {
+      "channel_id": "1204178985545056256",
+      "message_id": "1262564215779856384"
+    }
+  ],
+  "activity_items": []
+}
+```
+
+<RouteHeader method="POST" url="/guilds/gravity-join">
+  Join Gravity Guilds
+</RouteHeader>
+
+Joins the given Gravity guild recommendations.
+
+###### JSON Params
+
+| Field     | Type             | Description                                   |
+| --------- | ---------------- | --------------------------------------------- |
+| guild_ids | array[snowflake] | The IDs of the guilds to join                 |
+| location  | string           | The client location initiating the guild join |
+
+###### Example JSON Params
+
+```json
+{
+  "guild_ids": ["1204178985545056256", "1215387377138409472"],
+  "location": "icymi"
+}
+```
+
+<RouteHeader method="POST" url="/gravity-topic-guilds">
+  Get Gravity Topic Guilds
+</RouteHeader>
+
+Returns a [Gravity guild list](#gravity-guild-list-object) object for the requested topic categories.
+
+###### JSON Params
+
+| Field        | Type             | Description                     |
+| ------------ | ---------------- | ------------------------------- |
+| category_ids | array[snowflake] | The IDs of the topic categories |
+| offset       | integer          | The result offset               |
+
+###### Example JSON Params
+
+```json
+{
+  "category_ids": ["1232035516401129472"],
+  "offset": 0
+}
+```

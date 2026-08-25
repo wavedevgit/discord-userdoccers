@@ -1,0 +1,94 @@
+# Embedded Surveys
+
+Embedded surveys collect structured responses and actions from users.
+
+### Embedded Survey Action Response Object
+
+The response to an embedded survey action may contain a survey selected for the action.
+
+###### Embedded Survey Action Response Structure
+
+| Field   | Type   | Description                                |
+| ------- | ------ | ------------------------------------------ |
+| survey? | object | The survey selected for the action, if any |
+
+### Embedded Survey Response Object
+
+An embedded survey response identifies a submitted response.
+
+###### Embedded Survey Response Structure
+
+| Field      | Type   | Description                             |
+| ---------- | ------ | --------------------------------------- |
+| responseId | string | The ID of the submitted survey response |
+
+###### Example Embedded Survey Response
+
+```json
+{
+  "responseId": "R_4Qh72VfJwE8p1sD"
+}
+```
+
+## Endpoints
+
+<RouteHeader method="POST" url="/users/@me/embedded-surveys/{survey.id}/responses">
+  Create Embedded Survey Response
+</RouteHeader>
+
+Submits answers to an embedded survey. Returns an [embedded survey response](#embedded-survey-response-object) object on success.
+
+###### JSON Params
+
+| Field       | Type   | Description                                                                                        |
+| ----------- | ------ | -------------------------------------------------------------------------------------------------- |
+| values_json | string | A JSON-encoded object mapping question IDs and survey-provider field IDs to their submitted values |
+
+###### Example JSON Params
+
+```json
+{
+  "values_json": "{\"QID1\":2,\"QID2\":[\"1\",\"3\"],\"QID2_DO\":[\"1\",\"2\",\"3\"]}"
+}
+```
+
+<RouteHeader method="POST" url="/users/@me/embedded-survey/action">
+  Record Embedded Survey Action
+</RouteHeader>
+
+Records an action that may select an embedded survey. Returns an [embedded survey action response](#embedded-survey-action-response-object) object on success.
+
+###### JSON Params
+
+| Field       | Type   | Description                         |
+| ----------- | ------ | ----------------------------------- |
+| action_type | string | The type of action being recorded   |
+| metadata?   | object | Metadata associated with the action |
+
+###### Embedded Survey Action Type
+
+| Value                                   | Description                                      |
+| --------------------------------------- | ------------------------------------------------ |
+| nitro_unsubbed                          | A Nitro subscription was ended                   |
+| checkpoint_completed                    | A checkpoint was completed                       |
+| quest_completed                         | A Quest was completed                            |
+| ad_impression_quest_bar_opt_in          | The Quest bar ad-impression option was enabled   |
+| ad_impression_quest_bar_opt_out         | The Quest bar ad-impression option was disabled  |
+| bounty_session_completed                | A bounty session was completed                   |
+| bounty_immediate_dismissal              | A bounty was immediately dismissed               |
+| bounty_abandoned                        | A bounty was abandoned                           |
+| hangout_window_set                      | A hangout window was set                         |
+| populated_clip_gallery_closed           | A populated clip gallery was closed              |
+| topical_navigation_multiple_impressions | Multiple topical-navigation impressions occurred |
+| guild_room_joined                       | A guild room was joined                          |
+
+###### Example JSON Params
+
+```json
+{
+  "action_type": "quest_completed",
+  "metadata": {
+    "quest_id": "1248385850925256704"
+  }
+}
+```

@@ -266,12 +266,13 @@ Premium types denote the level of premium a user has. Visit the [Nitro](https://
 
 ###### Age Verification Status
 
-| Value | Name           | Description                                          |
-| ----- | -------------- | ---------------------------------------------------- |
-| 1     | UNVERIFIED     | User has not verified their age                      |
-| 2     | VERIFIED_TEEN  | User is a verified teenager                          |
-| 3     | VERIFIED_ADULT | User is a verified adult                             |
-| 4     | INFERRED_ADULT | User is inferred to be an adult via internal metrics |
+| Value | Name                | Description                                          |
+| ----- | ------------------- | ---------------------------------------------------- |
+| 1     | UNVERIFIED          | User has not verified their age                      |
+| 2     | VERIFIED_TEEN       | User is a verified teenager                          |
+| 3     | VERIFIED_ADULT      | User is a verified adult                             |
+| 4     | INFERRED_ADULT      | User is inferred to be an adult via internal metrics |
+| 99999 | CLIENT_ONLY_PENDING | Age verification is pending in the client            |
 
 ###### Required Action Type
 
@@ -280,7 +281,7 @@ Denotes an action Discord requires the user to take before they can continue usi
 | Value                                        | Description                                                                                                                                 | Action                                                                                                                                                                             |
 | -------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | AGREEMENTS                                   | The user must re-indicate their agreement of Discord's terms of service and privacy policy; this does not limit the user from using Discord | [Reaffirm agreements](#modify-user-agreements)                                                                                                                                     |
-| ~~REQUIRE_CAPTCHA~~                          | ~~The user must complete a reCAPTCHA challenge~~                                                                                            | ~~[Complete a reCAPTCHA challenge](#verify-user-captcha)~~                                                                                                                         |
+| ~~REQUIRE_CAPTCHA~~                          | ~~The user must complete a reCAPTCHA challenge~~                                                                                            | ~~Complete a reCAPTCHA challenge~~                                                                                                                                                 |
 | REQUIRE_VERIFIED_EMAIL                       | The user must add and verify an email address to their account                                                                              | [Add an email address](/topics/email-verification#adding-an-email-address)                                                                                                         |
 | REQUIRE_REVERIFIED_EMAIL                     | The user must reverify their existing email address                                                                                         | [Reverify your email address](/topics/email-verification#reverifying-your-email-address)                                                                                           |
 | REQUIRE_VERIFIED_PHONE                       | The user must add a phone number to their account                                                                                           | [Add a phone number](/topics/phone-verification#adding-a-phone-number)                                                                                                             |
@@ -1429,24 +1430,6 @@ Marks the current user's account for deletion. Invalidates all active tokens. Re
 | -------- | ------- | --------------------------- |
 | password | ?string | The user's password, if any |
 
-<RouteHeader method="POST" url="/users/@me/captcha/verify" deprecated>
-  Verify User Captcha
-</RouteHeader>
-
-Verifies a reCAPTCHA solution when needed by the [`REQUIRE_CAPTCHA` required action](#required-action-type). Returns a 204 empty response on success. Fires a [User Required Action Update](/gateway/gateway-events#user-required-action-update) Gateway event.
-
-###### reCAPTCHA Site Key
-
-```
-6Lef5iQTAAAAAKeIvIY-DeexoO3gj7ryl9rLMEnn
-```
-
-###### JSON Params
-
-| Field       | Type   | Description            |
-| ----------- | ------ | ---------------------- |
-| captcha_key | string | The reCAPTCHA solution |
-
 <RouteHeader method="PATCH" url="/users/@me/agreements">
   Modify User Agreements
 </RouteHeader>
@@ -1995,20 +1978,6 @@ A maximum number of 200 saved messages without a reminder can be saved per user.
 
 Unsaves a message for the current user. Returns a 204 empty response on success. Fires a [Saved Message Delete](/gateway/gateway-events#saved-message-delete) Gateway event.
 
-<RouteHeader method="POST" url="/age-verification/verify">
-  Verify Age
-</RouteHeader>
-
-Starts the age verification process using a third-party age verification provider. After the process is complete, a [age verification system message](/resources/message#age-verification-system-message) is sent to the user.
-
-###### Response Body
-
-| Field                    | Type   | Description                                                                |
-| ------------------------ | ------ | -------------------------------------------------------------------------- |
-| verification_request_id  | string | UUID generated by the server to track the current age verification request |
-| verification_vendor_name | string | The third party age verification provider (currently always `K_ID`)        |
-| verification_webview_url | string | The webview URL to iframe into the client                                  |
-
 <RouteHeader method="POST" url="/users/@me/identity/verification" deprecated>
   Create User Identity Verification
 </RouteHeader>
@@ -2038,3 +2007,112 @@ Returns a [user identity verification](#user-identity-verification-object) objec
 This endpoint is deprecated. Applications must now belong to a team to be verified. As such it is replaced by [Get Team Identity Verification](/resources/team#get-team-identity-verification).
 
 </Alert>
+
+<RouteHeader method="GET" url="/users/{user.id}/sessions/{session.id}/activities/{activity.id}/1">
+  Get User Activity Join
+</RouteHeader>
+
+Returns user activity join.
+
+###### Response Body
+
+| Field    | Type    | Description                       |
+| -------- | ------- | --------------------------------- |
+| secret   | string  | The activity join secret          |
+| join_url | ?string | The URL used to join the activity |
+
+<RouteHeader method="GET" url="/users/@me/custom-themes">
+  List Users Me Custom Themes
+</RouteHeader>
+
+Returns a 204 empty response on success.
+
+<RouteHeader method="GET" url="/users/@me/gift-intent-dismissals">
+  List Gift Intent Dismissals
+</RouteHeader>
+
+Returns gift intent dismissals.
+
+###### Response Body
+
+| Field      | Type                                | Description                        |
+| ---------- | ----------------------------------- | ---------------------------------- |
+| dismissals | array[gift intent dismissal object] | The current gift intent dismissals |
+
+<RouteHeader method="GET" url="/users/@me/billing/wallet/{wallet.id}/information">
+  Get Billing Wallet Information
+</RouteHeader>
+
+Returns billing wallet information.
+
+###### Query String Params
+
+| Field        | Type    | Description                       |
+| ------------ | ------- | --------------------------------- |
+| get_history? | boolean | Whether to include wallet history |
+
+<RouteHeader method="POST" url="/users/@me/gift-intents/dismiss">
+  Dismiss Gift Intent
+</RouteHeader>
+
+Dismisses gift intent.
+
+###### JSON Params
+
+| Field       | Type      | Description          |
+| ----------- | --------- | -------------------- |
+| intent_type | integer   | The intent type      |
+| target_id   | snowflake | The ID of the target |
+
+<RouteHeader method="POST" url="/users/@me/applications/{application.id}/entitlement-ticket">
+  Create Entitlement Ticket
+</RouteHeader>
+
+Creates an entitlement ticket for an application.
+
+###### JSON Params
+
+| Field     | Type    | Description   |
+| --------- | ------- | ------------- |
+| test_mode | boolean | The test mode |
+
+<RouteHeader method="POST" url="/users/@me/applications/{application.id}/ticket">
+  Create Application Ticket
+</RouteHeader>
+
+Creates an application ticket.
+
+###### JSON Params
+
+| Field     | Type    | Description   |
+| --------- | ------- | ------------- |
+| test_mode | boolean | The test mode |
+
+<RouteHeader method="POST" url="/users/disable-email-notifications">
+  Disable Email Notifications
+</RouteHeader>
+
+Disables email notifications.
+
+###### JSON Params
+
+| Field      | Type    | Description    |
+| ---------- | ------- | -------------- |
+| token      | string  | The token      |
+| pixel_uuid | string  | The pixel uuid |
+| category   | string  | The category   |
+| email_type | integer | The email type |
+
+<RouteHeader method="POST" url="/users/disable-server-highlight-notifications">
+  Disable Server Highlight Notifications
+</RouteHeader>
+
+Disables server highlight notifications.
+
+###### JSON Params
+
+| Field      | Type      | Description         |
+| ---------- | --------- | ------------------- |
+| token      | string    | The token           |
+| pixel_uuid | string    | The pixel uuid      |
+| guild_id   | snowflake | The ID of the guild |

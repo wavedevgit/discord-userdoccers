@@ -1,0 +1,140 @@
+# User Offers
+
+User offers represent trials, discounts, partner perks, rewards, and reactivation incentives available to a user.
+
+### User Offers Object
+
+Represents trial and discount offers available to the current user.
+
+###### User Offers Structure
+
+| Field    | Type                                                                               | Description                           |
+| -------- | ---------------------------------------------------------------------------------- | ------------------------------------- |
+| trial    | array[[user trial offer](/resources/billing#user-trial-offer-object) object]       | Trial offers available to the user    |
+| discount | array[[user discount offer](/resources/billing#user-discount-offer-object) object] | Discount offers available to the user |
+
+### Partner Perk Activation Status Object
+
+Represents the activation state of a partner perk.
+
+###### Partner Perk Activation Status Structure
+
+| Field          | Type       | Description                                      |
+| -------------- | ---------- | ------------------------------------------------ |
+| perk           | integer    | The [partner perk](#partner-perk-type)           |
+| state          | integer    | The [activation state](#partner-perk-state)      |
+| entitlement_id | ?snowflake | The ID of the entitlement granted for the perk   |
+| redirect       | ?string    | The URL used to continue partner-side activation |
+
+###### Partner Perk Type
+
+| Value | Name | Description         |
+| ----- | ---- | ------------------- |
+| 1     | XGPP | Xbox Game Pass perk |
+
+###### Partner Perk State
+
+| Value | Name                 | Description                           |
+| ----- | -------------------- | ------------------------------------- |
+| 1     | INITIAL              | Activation has started                |
+| 2     | AWAITING_ACTIVATION  | Activation is awaiting partner action |
+| 3     | ACTIVATED            | The perk is active                    |
+| 4     | FAILED               | Activation failed                     |
+| 5     | EXPIRED              | The activation expired                |
+| 6     | CANCELLATION_PENDING | Cancellation is pending               |
+
+###### Example Partner Perk Activation Status
+
+```json
+{
+  "perk": 1,
+  "state": 3,
+  "entitlement_id": "1422548914485198869",
+  "redirect": null
+}
+```
+
+### Program Rewards Object
+
+Contains rewards granted through Discord reward programs.
+
+###### Program Rewards Structure
+
+| Field   | Type                                                      | Description                |
+| ------- | --------------------------------------------------------- | -------------------------- |
+| rewards | array[[program reward](#program-reward-structure) object] | The user's program rewards |
+
+###### Program Reward Structure
+
+| Field          | Type    | Description                                      |
+| -------------- | ------- | ------------------------------------------------ |
+| reward_program | integer | The program through which the reward was granted |
+
+## Endpoints
+
+<RouteHeader method="GET" url="/user-offer-ids">
+  List User Offer IDs
+</RouteHeader>
+
+Returns the IDs of offers available to the current user.
+
+The response is an array of snowflakes.
+
+<RouteHeader method="GET" url="/user-offers">
+  List User Offers
+</RouteHeader>
+
+Returns a [user offers](#user-offers-object) object.
+
+<RouteHeader method="GET" url="/users/@me/program-rewards">
+  List Program Rewards
+</RouteHeader>
+
+Returns a [program rewards](#program-rewards-object) object.
+
+<RouteHeader
+  method="POST"
+  url="/users/@me/billing/subscriptions/{subscription.id}/reactivation-offers/{reactivation-offer.id}/redeem"
+>
+  Redeem Reactivation Offer
+</RouteHeader>
+
+Redeems a subscription reactivation offer.
+Returns the updated [subscription](/resources/subscription#subscription-object) object on success.
+
+<RouteHeader method="POST" url="/users/@me/partner-perks/{partner-perk.id}">
+  Activate Partner Perk
+</RouteHeader>
+
+Activates a partner perk.
+Returns a [partner perk activation status](#partner-perk-activation-status-object) object on success.
+
+<RouteHeader method="GET" url="/users/@me/partner-perks/{partner-perk.id}/activation-status">
+  List Partner Perk Activation Status
+</RouteHeader>
+
+Returns a [partner perk activation status](#partner-perk-activation-status-object) object.
+
+<RouteHeader method="POST" url="/user-offers/reverse-trial">
+  Create Reverse Trial
+</RouteHeader>
+
+Creates a reverse trial.
+
+###### JSON Params
+
+| Field   | Type              | Description                 |
+| ------- | ----------------- | --------------------------- |
+| ends_at | ISO8601 timestamp | When the reverse trial ends |
+
+<RouteHeader method="PATCH" url="/user-offers/{offer_type}/{offer.id}">
+  Modify User Offer
+</RouteHeader>
+
+Modifies user offer.
+
+###### JSON Params
+
+| Field      | Type              | Description            |
+| ---------- | ----------------- | ---------------------- |
+| expires_at | ISO8601 timestamp | When the offer expires |

@@ -1,0 +1,134 @@
+# Premium Groups
+
+Premium groups allow a subscription owner to invite and manage members of a shared premium subscription.
+
+### Premium Group Member Object
+
+Represents an owner, member, or pending invite in a premium group.
+
+###### Premium Group Member Structure
+
+| Field       | Type                                       | Description                                      |
+| ----------- | ------------------------------------------ | ------------------------------------------------ |
+| user        | [user](/resources/user#user-object) object | The user represented by the membership record    |
+| member_type | integer                                    | The [type of member](#premium-group-member-type) |
+| accepted_at | ?ISO8601 timestamp                         | When the member accepted the invite              |
+
+###### Premium Group Member Type
+
+| Value | Name    | Description                                   |
+| ----- | ------- | --------------------------------------------- |
+| 1     | PRIMARY | The owner of the premium group                |
+| 2     | MEMBER  | A member or invited user of the premium group |
+
+A `MEMBER` record with a `null` `accepted_at` value represents a pending invite.
+
+### Premium Group Membership Objecct
+
+Represents the current user's premium group membership.
+
+###### Premium Group Membership Structure
+
+| Field               | Type              | Description                                                                   |
+| ------------------- | ----------------- | ----------------------------------------------------------------------------- |
+| subscription_id     | snowflake         | The ID of the premium group subscription                                      |
+| member_type         | integer           | The [type of member](#premium-group-member-type)                              |
+| subscription_status | integer           | The [status](/resources/subscription#subscription-status) of the subscription |
+| current_period_end  | ISO8601 timestamp | When the current subscription period ends                                     |
+
+###### Example Premium Group Membership
+
+```json
+{
+  "subscription_id": "1422548914485198869",
+  "member_type": 2,
+  "subscription_status": 1,
+  "current_period_end": "2026-09-12T14:22:31.450000+00:00"
+}
+```
+
+### Eligible Premium Group Users Object
+
+Represents one page of users that may or may not be eligible for an invite.
+
+###### Eligible Premium Group Users Structure
+
+| Field             | Type                                              | Description                                   |
+| ----------------- | ------------------------------------------------- | --------------------------------------------- |
+| users             | array[[user](/resources/user#user-object) object] | The users eligible for an invite              |
+| ineligible_users? | array[[user](/resources/user#user-object) object] | The users that are not eligible for an invite |
+| next_index        | integer                                           | The index to use to retrieve the next page    |
+
+### Premium Group Invite Object
+
+Represents an invitation to join a premium group.
+
+###### Premium Group Invite Structure
+
+| Field        | Type               | Description                                      |
+| ------------ | ------------------ | ------------------------------------------------ |
+| id           | snowflake          | The ID of the premium group invite               |
+| user_id      | snowflake          | The ID of the invited user                       |
+| subscription | snowflake          | The ID of the premium group subscription         |
+| accepted_at  | ?ISO8601 timestamp | When the invite was accepted                     |
+| removed_at   | ?ISO8601 timestamp | When the invite was revoked or otherwise removed |
+
+## Endpoints
+
+<RouteHeader method="GET" url="/users/@me/billing/subscriptions/{subscription.id}/eligible-users">
+  List Eligible Premium Group Users
+</RouteHeader>
+
+Returns an [eligible premium group users](#eligible-premium-group-users-object) object.
+
+###### Query String Params
+
+| Field               | Type    | Description                                                  |
+| ------------------- | ------- | ------------------------------------------------------------ |
+| index?              | integer | The pagination index                                         |
+| limit?              | integer | The maximum number of users to return (default 10)           |
+| search_query?       | string  | The text used to filter users                                |
+| include_ineligible? | boolean | Whether to include users that are not eligible for an invite |
+
+<RouteHeader method="POST" url="/users/@me/billing/subscriptions/{subscription.id}/invites">
+  Invite Premium Group Members
+</RouteHeader>
+
+Invites users to the premium group.
+
+###### JSON Params
+
+| Field    | Type             | Description                    |
+| -------- | ---------------- | ------------------------------ |
+| user_ids | array[snowflake] | The IDs of the users to invite |
+
+###### Response Body
+
+| Field            | Type                                              | Description                     |
+| ---------------- | ------------------------------------------------- | ------------------------------- |
+| invited_users    | array[[user](/resources/user#user-object) object] | The users who were invited      |
+| ineligible_users | array[[user](/resources/user#user-object) object] | The users who were not eligible |
+
+<RouteHeader method="GET" url="/users/@me/billing/subscriptions/{subscription.id}/members">
+  List Premium Group Members
+</RouteHeader>
+
+Returns a list of [premium group member](#premium-group-member-object) objects.
+
+<RouteHeader method="GET" url="/users/@me/premium-group/membership">
+  Get Premium Group Membership
+</RouteHeader>
+
+Returns the current user's [premium group membership](#premium-group-membership-object) object, or `null` when the user is not in a premium group.
+
+<RouteHeader method="GET" url="/users/@me/premium-group/invites">
+  List Premium Group Invites
+</RouteHeader>
+
+Returns a list of [premium group invite](#premium-group-invite-object) objects.
+
+<RouteHeader method="GET" url="/users/@me/premium-group/invites/{invite.id}">
+  Get Premium Group Invite
+</RouteHeader>
+
+Returns a [premium group invite](#premium-group-invite-object) object.

@@ -28,11 +28,14 @@ In line with the API, instead of referring to Family Center users as "parents" o
 
 ###### Family Center Structure
 
-| Field          | Type                                                      | Description                                        |
-| -------------- | --------------------------------------------------------- | -------------------------------------------------- |
-| linked_users   | array[[linked user](#linked-user-object) object]          | List of linked users                               |
-| teen_audit_log | [teen audit log](#teen-audit-log-object) object           | Audit log of the linked users activity             |
-| users          | array[partial [user](/resources/user#user-object) object] | List of requestors the linked user is connected to |
+| Field                | Type                                                       | Description                                        |
+| -------------------- | ---------------------------------------------------------- | -------------------------------------------------- |
+| linked_users         | array[[linked user](#linked-user-object) object]           | List of linked users                               |
+| teen_audit_log       | [teen audit log](#teen-audit-log-object) object            | Audit log of the linked users activity             |
+| users                | array[partial [user](/resources/user#user-object) object]  | List of requestors the linked user is connected to |
+| spending_limit?      | ?object                                                    | The linked teen's spending limit                   |
+| monthly_purchases?   | ?object                                                    | The linked teen's monthly purchase summary         |
+| restricted_schedule? | ?[restricted schedule](#restricted-schedule-object) object | The linked teen's restricted schedule              |
 
 ### Linked User Object
 
@@ -102,14 +105,19 @@ Audit log of events of the linked user. Visible to both requestors and linked us
 
 ###### Teen Audit Log Structure
 
-| Field          | Type                                                      | Description                                                              |
-| -------------- | --------------------------------------------------------- | ------------------------------------------------------------------------ |
-| teen_user_id   | ?snowflake                                                | The ID of the linked user                                                |
-| range_start_id | ?snowflake                                                | A snowflake representing the start time of the current 7-day track range |
-| actions        | array[[action](#action-structure) object]                 | [Actions](#action-structure) the linked user has done                    |
-| users          | array[partial [user](/resources/user#user-object) object] | Users referenced in the audit log                                        |
-| guilds         | array[[guild](/resources/guild#guild-object) object]      | Guilds referenced in the audit log                                       |
-| totals         | map[integer, integer]                                     | Object keyed by [action types](#teen-action-type) with their totals      |
+| Field                 | Type                                                      | Description                                                              |
+| --------------------- | --------------------------------------------------------- | ------------------------------------------------------------------------ |
+| teen_user_id          | ?snowflake                                                | The ID of the linked user                                                |
+| range_start_id        | ?snowflake                                                | A snowflake representing the start time of the current 7-day track range |
+| actions               | array[[action](#action-structure) object]                 | [Actions](#action-structure) the linked user has done                    |
+| users                 | array[partial [user](/resources/user#user-object) object] | Users referenced in the audit log                                        |
+| guilds                | array[[guild](/resources/guild#guild-object) object]      | Guilds referenced in the audit log                                       |
+| totals                | map[integer, integer]                                     | Object keyed by [action types](#teen-action-type) with their totals      |
+| top_user_activities?  | array[object]                                             | The highest-ranked user activities                                       |
+| top_guild_activities? | array[object]                                             | The highest-ranked guild activities                                      |
+| total_spend?          | object                                                    | The linked teen's total spending                                         |
+| invoices?             | array[object]                                             | Invoices associated with the audit period                                |
+| gifts?                | array[object]                                             | Gifts associated with the audit period                                   |
 
 ###### Action Structure
 
@@ -195,6 +203,74 @@ Represents the grouped display type of an action.
 }
 ```
 
+### Restricted Schedule Object
+
+A restricted schedule contains time-based access rules for a linked teen.
+
+###### Restricted Schedule Structure
+
+| Field | Type                                                                       | Description                   |
+| ----- | -------------------------------------------------------------------------- | ----------------------------- |
+| rules | array[[restricted schedule rule](#restricted-schedule-rule-object) object] | The restricted schedule rules |
+
+### Restricted Schedule Rule Object
+
+A restricted schedule rule defines a recurring restricted period.
+
+###### Restricted Schedule Rule Structure
+
+| Field      | Type                                      | Description                          |
+| ---------- | ----------------------------------------- | ------------------------------------ |
+| rule_id    | string                                    | The ID of the rule                   |
+| label      | string                                    | The label of the rule                |
+| start_time | [time of day](#time-of-day-object) object | The start time of the restriction    |
+| end_time   | [time of day](#time-of-day-object) object | The end time of the restriction      |
+| days       | array[integer]                            | The [days of the week](#day-of-week) |
+| enabled    | boolean                                   | Whether the rule is enabled          |
+
+###### Day Of Week
+
+| Value | Name                    | Description |
+| ----- | ----------------------- | ----------- |
+| 0     | DAY_OF_WEEK_UNSPECIFIED | Unspecified |
+| 1     | MONDAY                  | Monday      |
+| 2     | TUESDAY                 | Tuesday     |
+| 3     | WEDNESDAY               | Wednesday   |
+| 4     | THURSDAY                | Thursday    |
+| 5     | FRIDAY                  | Friday      |
+| 6     | SATURDAY                | Saturday    |
+| 7     | SUNDAY                  | Sunday      |
+
+### Time Of Day Object
+
+A time of day identifies a wall-clock time.
+
+###### Time Of Day Structure
+
+| Field   | Type    | Description              |
+| ------- | ------- | ------------------------ |
+| hours   | integer | The hour                 |
+| minutes | integer | The minute               |
+| seconds | integer | The second               |
+| nanos   | integer | The nanosecond component |
+
+###### Example Restricted Schedule
+
+```json
+{
+  "rules": [
+    {
+      "rule_id": "school-night",
+      "label": "School nights",
+      "start_time": { "hours": 22, "minutes": 0, "seconds": 0, "nanos": 0 },
+      "end_time": { "hours": 7, "minutes": 0, "seconds": 0, "nanos": 0 },
+      "days": [1, 2, 3, 4, 5],
+      "enabled": true
+    }
+  ]
+}
+```
+
 ## Endpoints
 
 <RouteHeader method="GET" url="/family-center/@me">
@@ -270,3 +346,83 @@ Removes a linked user. Returns a list of [linked user](#linked-user-object) obje
 | Field          | Type      | Description                         |
 | -------------- | --------- | ----------------------------------- |
 | linked_user_id | snowflake | The ID of the linked user to remove |
+
+<RouteHeader method="GET" url="/family-center/{teen.id}/activity">
+  Get Family Center Teen Activity
+</RouteHeader>
+
+Returns a [Family Center](#family-center-object) object containing the linked teen's activity.
+
+<RouteHeader method="GET" url="/family-center/more-activity/{teen.id}/{display_type}/{range_start.id}/{event.id}">
+  Get Family Center Teen Activity More
+</RouteHeader>
+
+Returns a [Family Center](#family-center-object) object containing additional activity for the given teen, display type, date range, and event cursor.
+
+<RouteHeader method="GET" url="/family-center/connection-prerequisites">
+  List Family Center Connection Prerequisites
+</RouteHeader>
+
+Returns the connection prerequisites for a Family Center link.
+
+###### Query String Params
+
+| Field      | Type      | Description        |
+| ---------- | --------- | ------------------ |
+| teen_id?   | snowflake | The ID of the teen |
+| link_code? | string    | The link code      |
+
+<RouteHeader method="PATCH" url="/family-center/{teen.id}/settings-proto">
+  Modify Family Center Teen Settings
+</RouteHeader>
+
+Modifies family center teen settings.
+
+###### JSON Params
+
+| Field    | Type   | Description  |
+| -------- | ------ | ------------ |
+| settings | object | The settings |
+
+Returns an object containing the updated `settings` object on success.
+
+<RouteHeader method="PATCH" url="/family-center/{teen.id}/consents">
+  Modify Family Center Teen Consents
+</RouteHeader>
+
+Modifies family center teen consents.
+
+###### JSON Params
+
+| Field  | Type   | Description |
+| ------ | ------ | ----------- |
+| grant  | object | The grant   |
+| revoke | object | The revoke  |
+
+Returns the updated consents object on success.
+
+<RouteHeader method="POST" url="/family-center/{teen.id}/restricted-schedule/rule">
+  Create Restricted Schedule Rule
+</RouteHeader>
+
+Creates a restricted-schedule rule for the linked teen. Returns a [restricted schedule](#restricted-schedule-object) object on success.
+
+###### JSON Params
+
+The request body is a [restricted schedule rule](#restricted-schedule-rule-object) object.
+
+<RouteHeader method="PATCH" url="/family-center/{teen.id}/restricted-schedule/rules/{rule.id}">
+  Modify Family Center Restricted Schedule Rule
+</RouteHeader>
+
+Modifies a restricted-schedule rule for the linked teen. Returns a [restricted schedule](#restricted-schedule-object) object on success.
+
+###### JSON Params
+
+The request body contains the fields of a [restricted schedule rule](#restricted-schedule-rule-object) object to modify.
+
+<RouteHeader method="DELETE" url="/family-center/{teen.id}/restricted-schedule/rules/{rule.id}">
+  Delete Family Center Restricted Schedule Rule
+</RouteHeader>
+
+Deletes a restricted-schedule rule for the linked teen. Returns a [restricted schedule](#restricted-schedule-object) object on success.

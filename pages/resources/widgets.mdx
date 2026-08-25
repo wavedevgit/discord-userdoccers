@@ -461,10 +461,10 @@ Returns featured widget configs.
 
 ###### Response Body
 
-| Field           | Type                                                                    | Description                                          |
-| --------------- | ----------------------------------------------------------------------- | ---------------------------------------------------- |
-| application_ids | array[snowflake]                                                        | The application IDs of the featured widget configs   |
-| configs         | map[snowflake, array[[widget config](#widget-config-structure) object]] | The featured widget configs mapped by application ID |
+| Field        | Type                                                                           | Description                                   |
+| ------------ | ------------------------------------------------------------------------------ | --------------------------------------------- |
+| applications | array[partial [application](/resources/application#application-object) object] | The applications with featured widget configs |
+| configs      | array[[widget config](#widget-config-structure) object]                        | The featured widget configs                   |
 
 <RouteHeader method="GET" url="/widget-configs/developer" supportsBot>
   Get Developer Application Widget Configs
@@ -474,21 +474,10 @@ Returns widget configs of the apps the user has access to.
 
 ###### Response Body
 
-| Field   | Type                                                                    | Description                                          |
-| ------- | ----------------------------------------------------------------------- | ---------------------------------------------------- |
-| configs | map[snowflake, array[[widget config](#widget-config-structure) object]] | The featured widget configs mapped by application ID |
-
-<RouteHeader method="GET" url="/widget-configs/layout-definitions" supportsBot>
-  Get Layout Definitions
-</RouteHeader>
-
-Returns a map of [widget layout definitions](#widget-layout-definition-structure) for widget configs.
-
-###### Response Body
-
-| Field   | Type                                                                    | Description                                          |
-| ------- | ----------------------------------------------------------------------- | ---------------------------------------------------- |
-| configs | map[snowflake, array[[widget config](#widget-config-structure) object]] | The featured widget configs mapped by application ID |
+| Field        | Type                                                                           | Description                                |
+| ------------ | ------------------------------------------------------------------------------ | ------------------------------------------ |
+| applications | array[partial [application](/resources/application#application-object) object] | The developer's applications               |
+| configs      | array[[widget config](#widget-config-structure) object]                        | The developer applications' widget configs |
 
 <RouteHeader method="GET" url="/applications/{application.id}/widget-configs" supportsBot>
   List Application Widget Configs
@@ -539,3 +528,42 @@ Publishes the widget config. Returns the [widget config](#widget-config-structur
 </RouteHeader>
 
 Unpublishes the widget config. Returns the [widget config](#widget-config-structure) on success.
+
+<RouteHeader method="POST" url="/users/@me/widgets/assets/upload">
+  Request User Profile Widget Asset Upload
+</RouteHeader>
+
+Creates an upload URL for a widget asset.
+
+###### JSON Params
+
+| Field     | Type    | Description   |
+| --------- | ------- | ------------- |
+| filename  | string  | The filename  |
+| file_size | integer | The file size |
+
+###### Response Body
+
+| Field           | Type   | Description                                |
+| --------------- | ------ | ------------------------------------------ |
+| upload_url      | string | The presigned URL used to upload the file  |
+| upload_filename | string | The filename assigned to the uploaded file |
+
+<RouteHeader method="POST" url="/users/@me/widgets/clips/upload">
+  Request User Profile Widget Clip Upload
+</RouteHeader>
+
+Creates an upload URL for a widget clip.
+
+###### JSON Params
+
+| Field     | Type    | Description   |
+| --------- | ------- | ------------- |
+| file_size | integer | The file size |
+
+###### Response Body
+
+| Field           | Type   | Description                                |
+| --------------- | ------ | ------------------------------------------ |
+| upload_url      | string | The presigned URL used to upload the clip  |
+| upload_filename | string | The filename assigned to the uploaded clip |

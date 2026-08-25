@@ -9,6 +9,58 @@ Users should not assume that a CAPTCHA will only be returned from a subset of en
 
 </Alert>
 
+## Test Endpoint
+
+<RouteHeader method="POST" url="/captcha/decider">
+  Test CAPTCHA Decider
+</RouteHeader>
+
+Tests a CAPTCHA decider with the provided options.
+
+###### JSON Params
+
+| Field   | Type                                                           | Description                                     |
+| ------- | -------------------------------------------------------------- | ----------------------------------------------- |
+| decider | string                                                         | The [CAPTCHA decider](#captcha-decider) to test |
+| options | [CAPTCHA test options](#captcha-test-options-structure) object | Options for the CAPTCHA test                    |
+
+###### CAPTCHA Decider
+
+| Value               | Description                                   |
+| ------------------- | --------------------------------------------- |
+| hCaptchaRqdata      | Tests an hCaptcha challenge with request data |
+| SmiteRqdata         | Tests a Smite challenge with request data     |
+| Recaptcha           | Tests a reCAPTCHA challenge                   |
+| RecaptchaEnterprise | Tests a reCAPTCHA Enterprise challenge        |
+
+###### CAPTCHA Test Options Structure
+
+| Field                   | Type    | Description                                       |
+| ----------------------- | ------- | ------------------------------------------------- |
+| difficulty?             | integer | The [hCaptcha difficulty](#hcaptcha-difficulty)   |
+| should_serve_invisible? | boolean | Whether the CAPTCHA challenge should be invisible |
+
+###### hCaptcha Difficulty
+
+| Value | Name           | Description    |
+| ----- | -------------- | -------------- |
+| 1     | EASY           | Easy           |
+| 2     | MODERATE       | Moderate       |
+| 3     | DIFFICULT      | Difficult      |
+| 4     | VERY_DIFFICULT | Very difficult |
+
+###### Example Request
+
+```json
+{
+  "decider": "hCaptchaRqdata",
+  "options": {
+    "difficulty": 3,
+    "should_serve_invisible": false
+  }
+}
+```
+
 ## Identifying CAPTCHAs
 
 When a request is challenged, the endpoint will return a 400 bad request with a response body looking similar to a legacy error response:

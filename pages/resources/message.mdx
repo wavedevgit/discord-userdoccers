@@ -2001,7 +2001,7 @@ Reports an explicit content false positive for a message. Returns a 204 empty re
 
 This endpoint should be used upon viewing a message that was flagged as explicit content but was determined to be a false positive.
 
-##### JSON Params
+###### JSON Params
 
 | Field          | Type             | Description                                                                                                                              |
 | -------------- | ---------------- | ---------------------------------------------------------------------------------------------------------------------------------------- |
@@ -2444,3 +2444,76 @@ Updates a message's moderation metadata in the DM channel. Accepts a moderation 
 This endpoint is not usable by user accounts.
 
 </Alert>
+
+<RouteHeader method="GET" url="/channels/{channel.id}/conversations">
+  List Channel Conversations
+</RouteHeader>
+
+Returns extracted conversations for the channel, ordered by their starting message ID.
+
+###### Query String Params
+
+| Field              | Type      | Description                                                     |
+| ------------------ | --------- | --------------------------------------------------------------- |
+| before? ^1^        | snowflake | Get conversations before this message ID                        |
+| after? ^1^         | snowflake | Get conversations after this message ID                         |
+| around? ^1^        | snowflake | Get conversations around this message ID                        |
+| limit?             | integer   | The maximum number of conversations to return (default 25)      |
+| include_messages?  | boolean   | Whether to include messages for each conversation               |
+| message_limit? ^2^ | integer   | The maximum number of messages to include for each conversation |
+
+^1^ At most one of `before`, `after`, and `around` is sent.
+
+^2^ Used when `include_messages` is `true`.
+
+###### Response Body
+
+| Field         | Type          | Description                      |
+| ------------- | ------------- | -------------------------------- |
+| conversations | array[object] | The conversations in the channel |
+
+<RouteHeader method="GET" url="/channels/{channel.id}/conversations/{conversation.id}/messages">
+  List Channel Conversation Messages
+</RouteHeader>
+
+Returns messages in the requested conversation.
+
+###### Query String Params
+
+| Field                       | Type    | Description                                       |
+| --------------------------- | ------- | ------------------------------------------------- |
+| limit?                      | integer | The maximum number of messages to return          |
+| include_message_references? | boolean | Whether to include referenced messages            |
+| include_reactions?          | boolean | Whether to include reactions on returned messages |
+
+###### Response Body
+
+| Field              | Type                                     | Description                              |
+| ------------------ | ---------------------------------------- | ---------------------------------------- |
+| messages           | array[[message](#message-object) object] | The messages in the conversation         |
+| reference_messages | array[[message](#message-object) object] | Messages referenced by returned messages |
+
+<RouteHeader method="GET" url="/clips/module-assets">
+  List Clips Module Assets
+</RouteHeader>
+
+Returns the native clips module's model assets.
+
+###### Query String Params
+
+| Field             | Type    | Description                 |
+| ----------------- | ------- | --------------------------- |
+| model_set_version | integer | The model set version (`1`) |
+
+###### Response Body
+
+| Field            | Type                                                              | Description            |
+| ---------------- | ----------------------------------------------------------------- | ---------------------- |
+| model_set_assets | array[[clips module asset](#clips-module-asset-structure) object] | The clips model assets |
+
+###### Clips Module Asset Structure
+
+| Field    | Type   | Description                       |
+| -------- | ------ | --------------------------------- |
+| filename | string | The local filename for the asset  |
+| url      | string | The URL from which to download it |

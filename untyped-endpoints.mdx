@@ -1,0 +1,733 @@
+<RouteHeader method="DELETE" url="/users/@me/library/{application.id}">
+  Delete Library Application
+</RouteHeader>
+
+Removes an application from the current user's library.
+
+<RouteHeader method="POST" url="/users/@me/library/{application.id}/{branch.id}/installed">
+  Mark Library Application Installed
+</RouteHeader>
+
+Marks an application branch as installed for the current user.
+
+<RouteHeader method="GET" url="/applications/{application.id}/branches/{branch.id}/storage">
+  Get Application Storage
+</RouteHeader>
+
+Provides the authenticated storage interface used by Discord cloud saves for the application branch.
+
+<RouteHeader method="GET" url="/platform-application">
+  Get Platform Application
+</RouteHeader>
+
+Returns platform application.
+
+<RouteHeader method="GET" url="/roblox-applications-supplemental-data">
+  Get Roblox Applications Supplemental Data
+</RouteHeader>
+
+Returns roblox applications supplemental data.
+
+<RouteHeader method="GET" url="/oauth2/applications/{application.id}/rpc">
+  Get Application Rpc
+</RouteHeader>
+
+Returns application rpc.
+
+<RouteHeader method="GET" url="/applications/trending/global">
+  Get Applications Trending
+</RouteHeader>
+
+Returns applications trending.
+
+<RouteHeader
+  method="GET"
+  url="/activities/applications/{application.id}/activity-instances/{activity-instance.id}/join"
+>
+  Get Activity Join Instance
+</RouteHeader>
+
+Returns the data required to join the activity instance.
+
+<RouteHeader method="GET" url="/activities/discord-config/{discord-config.id}">
+  Get Activities Discord Config
+</RouteHeader>
+
+Returns the Discord configuration associated with the given activity configuration ID.
+
+<RouteHeader method="GET" url="/applications/{application.id}/payment-payout-groups">
+  List Payment Payout Groups
+</RouteHeader>
+
+Returns payment payout groups.
+
+<RouteHeader
+  method="GET"
+  url="/applications/{application.id}/subscription-group-listings/{subscription-group-listing.id}"
+>
+  Get Application Subscription Group Listing
+</RouteHeader>
+
+Returns the subscription group listing for the application.
+
+<RouteHeader method="POST" url="/billing/apple/apply-receipt">
+  Apply Apple Receipt
+</RouteHeader>
+
+Applies an Apple App Store receipt to the current account.
+
+<RouteHeader method="GET" url="/billing/apple/subscriptions/{subscription.id}">
+  Get Billing Apple Subscription
+</RouteHeader>
+
+Returns billing apple subscription.
+
+<RouteHeader method="POST" url="/billing/apple/jwt-token">
+  Create Apple IAP JWT
+</RouteHeader>
+
+Creates the JWT used for an Apple in-app purchase request.
+
+<RouteHeader method="POST" url="/billing/apple/acom-subscriptions/migrate">
+  Migrate Apple Subscription
+</RouteHeader>
+
+Migrates an Apple subscription to the current account-management subscription flow.
+
+<RouteHeader method="GET" url="/billing/store-country">
+  Get Billing Store Country
+</RouteHeader>
+
+Returns the billing store country.
+
+<RouteHeader method="POST" url="/google-play/verify-purchase-token">
+  Verify Google Play Purchase
+</RouteHeader>
+
+Verifies a Google Play purchase token and applies the purchase to the account.
+
+<RouteHeader method="POST" url="/google-play/downgrade-subscription">
+  Downgrade Google Play Subscription
+</RouteHeader>
+
+Downgrades a Google Play subscription to the requested plan.
+
+<RouteHeader method="POST" url="/google-play/validate-purchase">
+  Validate Google Play Purchase
+</RouteHeader>
+
+Validates a Google Play purchase before applying it to the account.
+
+<RouteHeader method="GET" url="/channels/{channel.id}/threads/archived/{archived.id}">
+  List All Archived Threads
+</RouteHeader>
+
+Returns all archived threads.
+
+<RouteHeader method="GET" url="/channels">
+  List Channels
+</RouteHeader>
+
+Returns channels.
+
+<RouteHeader method="GET" url="/channels/{channel.id}/recipients">
+  List Channel Recipients
+</RouteHeader>
+
+Returns channel recipients.
+
+<RouteHeader method="POST" url="/channels/{channel.id}/convert">
+  Convert Channel
+</RouteHeader>
+
+Converts the channel to the channel type selected by the server.
+
+<RouteHeader method="GET" url="/channels/{channel.id}/store-listing">
+  List Channel Store Listing
+</RouteHeader>
+
+Returns channel store listing.
+
+<RouteHeader method="GET" url="/channels/{channel.id}/store-listings/{store-listing.id}">
+  List Channel Store Listing SKU
+</RouteHeader>
+
+Returns channel store listing sku.
+
+<RouteHeader method="POST" url="/channels/{channel.id}/store-listing/entitlement-grant">
+  Grant Channel Entitlement
+</RouteHeader>
+
+Grants the current user the entitlement associated with the channel store listing.
+
+<RouteHeader method="GET" url="/channels/{channel.id}/follower-message-stats">
+  List Channel Follower Message Stats
+</RouteHeader>
+
+Returns channel follower message stats.
+
+<RouteHeader method="GET" url="/channels/{channel.id}/voice-history">
+  Get Channel Voice History
+</RouteHeader>
+
+Returns channel voice history.
+
+<RouteHeader method="GET" url="/channels/{channel.id}/messages/{message.id}/reactions/{emoji}/{user.id}">
+  Get Reaction
+</RouteHeader>
+
+Returns reaction.
+
+<RouteHeader method="GET" url="/channels/{channel.id}/messages/{message.id}/reactions/{emoji}/{type}/{user.id}">
+  Get Reaction With Type
+</RouteHeader>
+
+Returns reaction with type.
+
+<RouteHeader method="GET" url="/channels/{channel.id}/application-commands/search">
+  Get Application Commands Search
+</RouteHeader>
+
+Returns application commands search.
+
+<RouteHeader method="GET" url="/conference-mode/guilds">
+  List Conference Mode Guilds
+</RouteHeader>
+
+Returns the conference-mode guilds available to the current user.
+
+<RouteHeader method="GET" url="/conference-mode/{conference-mode.id}/channels">
+  List Conference Mode Voice Channels
+</RouteHeader>
+
+Returns voice channels for the conference-mode guild.
+
+<RouteHeader method="GET" url="/conference-mode/channels/{channel.id}">
+  Get Conference Mode Voice Channel
+</RouteHeader>
+
+Returns the conference-mode voice channel.
+
+<RouteHeader method="GET" url="/conference-mode/channels/{channel.id}/users">
+  List Conference Mode Voice Channel Users
+</RouteHeader>
+
+Returns users in the conference-mode voice channel.
+
+<RouteHeader method="GET" url="/conference-mode/events">
+  List Conference Mode Events
+</RouteHeader>
+
+Returns conference-mode events.
+
+<RouteHeader method="POST" url="/conference-mode/conference">
+  Create Conference
+</RouteHeader>
+
+Creates or updates the current conference-mode conference.
+
+<RouteHeader method="POST" url="/connections/{connection.id}/link-dispatch-auth-callback">
+  Complete Link Dispatch Authorization Callback
+</RouteHeader>
+
+Completes a connection authorization callback initiated through link dispatch.
+
+<RouteHeader method="POST" url="/consoles/xbox-handoff">
+  Create Xbox Handoff
+</RouteHeader>
+
+Creates an Xbox account-linking handoff.
+
+<RouteHeader method="GET" url="/content-inventory/users/{user.id}/outbox">
+  Get Content Inventory Outbox
+</RouteHeader>
+
+Returns the content inventory outbox object for the given user.
+
+<RouteHeader method="DELETE" url="/content-inventory/users/@me/outbox/entries/id/{entry.id}/history">
+  Delete My Content Inventory Outbox Entry History
+</RouteHeader>
+
+Deletes the delivery history for an outbox entry.
+
+<RouteHeader method="GET" url="/guilds/{guild.id}/discovery-checklist">
+  List Guild Discovery Checklist
+</RouteHeader>
+
+Returns guild discovery checklist.
+
+<RouteHeader method="GET" url="/guilds/{guild.id}/analytics/overview">
+  Get Guild Analytics Overview
+</RouteHeader>
+
+Returns guild analytics overview.
+
+<RouteHeader method="GET" url="/guilds/{guild.id}/guild-feed">
+  Get Guild Feed
+</RouteHeader>
+
+Returns guild feed.
+
+<RouteHeader method="GET" url="/discoverable-guilds/mobile-game-communities">
+  List Mobile Game Communities
+</RouteHeader>
+
+Returns mobile game communities.
+
+<RouteHeader method="GET" url="/guilds/{guild.id}/active-channels">
+  List Active Channels
+</RouteHeader>
+
+Returns active channels.
+
+<RouteHeader method="GET" url="/users/@me/embedded-survey/{survey.id}">
+  Get Embedded Survey
+</RouteHeader>
+
+Returns the embedded survey definition for the given survey ID. The definition is consumed as an object containing a `Questions` map; each question may contain `QuestionType`, `Selector`, `ChoiceOrder`, and other survey-provider fields.
+
+<RouteHeader method="GET" url="/family-center/teen-user/{teen.id}">
+  Get Family Center Teen User
+</RouteHeader>
+
+Returns the Family Center user object for the given teen.
+
+<RouteHeader method="GET" url="/family-center/{teen.id}/settings-and-consents">
+  Get Family Center Teen Settings And Consents
+</RouteHeader>
+
+Returns an object containing `settings` and `consents` objects for the linked teen.
+
+<RouteHeader method="POST" url="/family-center/share-iar-with-parents">
+  Share Age Verification Result With Parents
+</RouteHeader>
+
+Shares the current user's age-verification result with linked parents.
+
+<RouteHeader method="POST" url="/users/@me/gravity-attachments-upload">
+  Request Gravity Attachments Upload
+</RouteHeader>
+
+Creates upload descriptors for attachments referenced by Gravity content.
+
+<RouteHeader method="GET" url="/users/@me/gravity-icymi-legacy">
+  List Legacy Dehydrated Gravity Items
+</RouteHeader>
+
+Returns the legacy dehydrated Gravity feed.
+
+<RouteHeader method="POST" url="/gravity-custom-guild-score">
+  Set Gravity Guild Scores
+</RouteHeader>
+
+Sets custom Gravity recommendation scores for guilds.
+
+<RouteHeader method="GET" url="/gravity-custom-channel-scores">
+  List Gravity Custom Channel Scores
+</RouteHeader>
+
+Returns the custom Gravity channel scores object.
+
+<RouteHeader method="GET" url="/guild-events">
+  List Guild Events
+</RouteHeader>
+
+Returns guild events.
+
+<RouteHeader method="GET" url="/guilds/{guild.id}/profile/{profile.id}">
+  Get User Guild Profile
+</RouteHeader>
+
+Returns user guild profile.
+
+<RouteHeader method="GET" url="/guilds/{guild.id}/onboarding-prompts/{onboarding-prompt.id}">
+  Get Guild Onboarding Prompt
+</RouteHeader>
+
+Returns guild onboarding prompt.
+
+<RouteHeader method="POST" url="/guilds/{guild.id}/delete">
+  Delete Guild
+</RouteHeader>
+
+Permanently deletes the guild after the required ownership confirmation.
+
+<RouteHeader method="GET" url="/partners/{partner.id}/requirements">
+  List Partner Requirements
+</RouteHeader>
+
+Returns partner requirements.
+
+<RouteHeader method="GET" url="/guilds/{guild.id}/profile/visibility">
+  Get Guild Profile Visibility
+</RouteHeader>
+
+Returns guild profile visibility.
+
+<RouteHeader method="POST" url="/guilds/{guild.id}/creator-monetization/accept-new-terms">
+  Accept Creator Monetization Terms
+</RouteHeader>
+
+Accepts the latest creator monetization terms for the guild.
+
+<RouteHeader method="POST" url="/guilds/{guild.id}/powerups-system-message">
+  Send Powerups System Message
+</RouteHeader>
+
+Sends the guild powerups system message.
+
+<RouteHeader method="GET" url="/integrations">
+  List Integrations
+</RouteHeader>
+
+Returns a list of integrations available to the current user.
+
+<RouteHeader method="GET" url="/layouts/{tenant.id}/{layout.id}">
+  Get Layout System
+</RouteHeader>
+
+Returns the layout identified by the tenant and layout IDs. The response is a recursively nested layout document; all response keys except `request_params` are converted to camel case by the client.
+
+<RouteHeader method="POST" url="/channels/{channel.id}/messages/announcement">
+  Create Announcement Message
+</RouteHeader>
+
+Creates an announcement message in the channel.
+
+<RouteHeader method="POST" url="/messages-log/private-channels/get">
+  Get Private Channel Message Logs
+</RouteHeader>
+
+Retrieves message-log entries for private channels using the filters in the request body.
+
+<RouteHeader method="POST" url="/messages-log/guild-channels/get">
+  Get Guild Channel Message Logs
+</RouteHeader>
+
+Retrieves message-log entries for guild channels using the filters in the request body.
+
+<RouteHeader method="PATCH" url="/billing/orders/{order.id}/line-items/{line_item.id}">
+  Modify Order Line Item
+</RouteHeader>
+
+Modifies a line item on an open order.
+
+<RouteHeader method="POST" url="/billing/orders/{order.id}/cancel-signing">
+  Cancel Order Signing
+</RouteHeader>
+
+Cancels an in-progress order-signing operation.
+
+<RouteHeader method="GET" url="/partners/connections">
+  List Partners Connections
+</RouteHeader>
+
+Returns partners connections.
+
+<RouteHeader method="POST" url="/partners/apply">
+  Apply to Partner Program
+</RouteHeader>
+
+Submits an application to the Discord Partner Program.
+
+<RouteHeader method="PATCH" url="/users/@me/billing/subscriptions/{subscription.id}/members/{member.id}/invite">
+  Accept Premium Group Invite
+</RouteHeader>
+
+Accepts a pending premium group invitation for the member.
+
+<RouteHeader method="DELETE" url="/users/@me/billing/subscriptions/{subscription.id}/members/{member.id}/invite">
+  Revoke Premium Group Invite
+</RouteHeader>
+
+Revokes a pending premium group invitation.
+
+<RouteHeader method="DELETE" url="/users/@me/billing/subscriptions/{subscription.id}/members/{member.id}">
+  Remove Premium Group Member
+</RouteHeader>
+
+Removes a member from the premium group.
+
+<RouteHeader method="GET" url="/entitlements/partner-promotions/{promotion.id}">
+  List Partner Promotions
+</RouteHeader>
+
+Returns partner promotions associated with the entitlement.
+
+<RouteHeader method="GET" url="/premium-marketing/@me/campaigns/{campaign.id}/eligibility">
+  Get Marketing Campaign Eligibility
+</RouteHeader>
+
+Returns marketing campaign eligibility.
+
+<RouteHeader method="POST" url="/initiate-prompts">
+  Initiate Prompts
+</RouteHeader>
+
+Initiates the configured prompt sequence.
+
+<RouteHeader method="POST" url="/{resource.id}/force-send-prompt">
+  Force Send Prompt
+</RouteHeader>
+
+Forces the selected prompt to be sent for the resource.
+
+<RouteHeader method="GET" url="/quests/appstore-metadata">
+  Get Quests App Store Metadata
+</RouteHeader>
+
+Returns quests app store metadata.
+
+<RouteHeader method="POST" url="/safety-flows/resend/email/reverification/pincode">
+  Resend Safety Flow Verification Code
+</RouteHeader>
+
+Resends the email reverification PIN for a safety flow.
+
+<RouteHeader method="GET" url="/soundboard-sounds/{sound.id}" unauthenticated>
+  Get Soundboard Sound
+</RouteHeader>
+
+Returns the audio file for the soundboard sound.
+
+<RouteHeader method="GET" url="/stage-instances/extra">
+  Get Stage Instances Extra
+</RouteHeader>
+
+Returns stage instances extra.
+
+<RouteHeader method="GET" url="/storefront/products">
+  List Storefront Products
+</RouteHeader>
+
+Returns storefront products with their SKUs.
+
+<RouteHeader method="POST" url="/store/published-listings/skus/{sku.id}/guild/join">
+  Join Store Listing Guild
+</RouteHeader>
+
+Joins the guild associated with a published store listing SKU.
+
+<RouteHeader method="GET" url="/users/@me/perks-demos">
+  List User Perks Demos
+</RouteHeader>
+
+Returns user perks demos.
+
+<RouteHeader method="POST" url="/users/@me/activate-perk-demo/{perk_demo.id}">
+  Activate Perk Demo
+</RouteHeader>
+
+Activates the specified perk demonstration for the current user.
+
+<RouteHeader method="DELETE" url="/user-offers">
+  Delete User Offers
+</RouteHeader>
+
+Clears all current user offers.
+
+<RouteHeader method="DELETE" url="/users/@me/partner-perks/{partner-perk.id}">
+  Delete Partner Perk
+</RouteHeader>
+
+Cancels the current user's partner perk activation.
+
+<RouteHeader method="POST" url="/user-offers/create/{offer_type}/{offer.id}">
+  Create User Offer
+</RouteHeader>
+
+Creates the specified trial or discount offer for the current user.
+
+<RouteHeader method="DELETE" url="/user-offers/{offer_type}/{offer.id}">
+  Delete User Offer
+</RouteHeader>
+
+Removes the specified trial or discount offer from the current user.
+
+<RouteHeader method="GET" url="/users/@me/billing/campaign-context">
+  Get Campaign Context
+</RouteHeader>
+
+Returns campaign context.
+
+<RouteHeader method="POST" url="/holidays/redeem-prize">
+  Redeem Holiday Prize
+</RouteHeader>
+
+Redeems the current holiday prize for the user.
+
+<RouteHeader method="POST" url="/users/@me/background-sync">
+  Synchronize Background State
+</RouteHeader>
+
+Submits background synchronization state for the current user.
+
+<RouteHeader method="POST" url="/friend-finder/find-friends">
+  Find Friends
+</RouteHeader>
+
+Matches uploaded contact identifiers against Discord users.
+
+<RouteHeader method="GET" url="/tutorial/indicators">
+  List Tutorial Indicators
+</RouteHeader>
+
+Returns tutorial indicators.
+
+<RouteHeader method="GET" url="/users">
+  List Users
+</RouteHeader>
+
+Returns users.
+
+<RouteHeader method="GET" url="/users/@me/unclaimed-games">
+  List Unclaimed Games
+</RouteHeader>
+
+Returns unclaimed games.
+
+<RouteHeader method="GET" url="/users/@me/affinities/v2/channels">
+  Get Channel Affinities v2
+</RouteHeader>
+
+Returns channel affinities v2.
+
+<RouteHeader method="POST" url="/users/@me/mfa/totp/enable/verify">
+  Verify TOTP Enable Code
+</RouteHeader>
+
+Verifies the emailed code required while enabling TOTP MFA.
+
+<RouteHeader method="POST" url="/users/@me/mfa/totp/enable/resend">
+  Resend TOTP Enable Code
+</RouteHeader>
+
+Resends the verification email required while enabling TOTP MFA.
+
+<RouteHeader method="POST" url="/users/@me/billing/stripe/payment-elements/setup-intents">
+  Create Stripe Setup Intent
+</RouteHeader>
+
+Creates a Stripe SetupIntent and returns its client secret for Payment Element setup.
+
+<RouteHeader method="GET" url="/users/@me/billing/invoice">
+  Get Billing Invoice PDF
+</RouteHeader>
+
+Returns billing invoice pdf.
+
+<RouteHeader method="GET" url="/users/@me/billing/stripe/payment-intents/payments/{payment.id}">
+  List Billing Stripe Payment Intents
+</RouteHeader>
+
+Returns billing stripe payment intents.
+
+<RouteHeader method="GET" url="/users/@me/billing/stripe/payment-intents/{payment-intent.id}">
+  Get Billing Stripe Payment Intents Via ID
+</RouteHeader>
+
+Returns billing stripe payment intents via id.
+
+<RouteHeader method="GET" url="/users/@me/billing/perks-relevance">
+  Get Billing Perks Relevance
+</RouteHeader>
+
+Returns billing perks relevance.
+
+<RouteHeader method="POST" url="/users/@me/billing/apple/trial-offer-signature">
+  Generate Apple Trial Offer Signature
+</RouteHeader>
+
+Generates the signature required to redeem an Apple introductory or trial offer.
+
+<RouteHeader method="GET" url="/users/@me/billing/subscriptions/{subscription.id}/rewards">
+  List Billing Subscription Rewards
+</RouteHeader>
+
+Returns billing subscription rewards.
+
+<RouteHeader method="PUT" url="/users/@me/connections/contacts/@me/external-friend-list-entries">
+  Set Connection Sync Contacts
+</RouteHeader>
+
+Replaces the current user's synchronized contact friend entries.
+
+<RouteHeader method="POST" url="/users/@me/tenure-reward/sync">
+  Synchronize Tenure Reward
+</RouteHeader>
+
+Synchronizes the current user's tenure reward state.
+
+<RouteHeader method="GET" url="/users/@me/billing/subscriptions/{subscription.id}/reward-eligibility">
+  Get Billing Subscription Reward Eligibility
+</RouteHeader>
+
+Returns billing subscription reward eligibility.
+
+<RouteHeader method="DELETE" url="/vibegrations/projects/{project.id}">
+  Delete Vibegrations Project
+</RouteHeader>
+
+Deletes a Vibegrations project.
+
+<RouteHeader method="POST" url="/oauth2/samsung/authorize">
+  Authorize Samsung Account
+</RouteHeader>
+
+Starts OAuth2 authorization for a Samsung account connection.
+
+<RouteHeader method="POST" url="/oauth2/samsung/authorize/callback">
+  Authorize Samsung Account Callback
+</RouteHeader>
+
+Completes the Samsung OAuth2 authorization callback.
+
+<RouteHeader method="POST" url="/debug-logs/{log.id}/{log_type}">
+  Upload Debug Log
+</RouteHeader>
+
+Uploads a plain-text debug log. The client uses `discord_app_logs` as the `log_type` path parameter and retries the request up to three times.
+
+###### Request Body
+
+The request body is a `text/plain` debug log.
+
+<RouteHeader method="POST" url="/mod-report/{mod-report.id}/close">
+  Close Moderator Report
+</RouteHeader>
+
+Closes a moderator report. The request body is an empty object.
+
+<RouteHeader method="PUT" url="/mod-report/{mod-report.id}/reopen">
+  Set Report To Mod Reopen
+</RouteHeader>
+
+Reopens a previously closed moderator report.
+
+<RouteHeader method="GET" url="/private/bug-reports">
+  List Bug Reports
+</RouteHeader>
+
+Returns bug reports.
+
+###### Response Body
+
+The response object contains the available bug-report priorities and features. Feature objects may contain `name`, `squad`, and `asana_inbox_id` fields.
+
+<RouteHeader method="POST" url="/science">
+  Submit Science Events
+</RouteHeader>
+
+Submits client analytics events. The analytics transport constructs this request internally; its event payload schema varies by event.
+
+<RouteHeader method="GET" url="/metrics">
+  List Metrics
+</RouteHeader>
+
+Returns metrics from the legacy metrics endpoint.
+
+<RouteHeader method="GET" url="/templates/{tenant.id}/{template.id}">
+  Get Layout System Template
+</RouteHeader>
+
+Returns the rendered layout template identified by the tenant and template IDs. Query string parameters are template-specific and are passed through unchanged. The response is a recursively nested layout document; all response keys except `request_params` are converted to camel case by the client.

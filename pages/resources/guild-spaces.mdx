@@ -1,0 +1,215 @@
+# Guild Spaces
+
+Guild spaces contain a configurable header and widgets for a guild.
+
+### Guild Space Object
+
+A guild space contains the content displayed on a guild's space page.
+
+###### Guild Space Structure
+
+| Field   | Type                                                           | Description                            |
+| ------- | -------------------------------------------------------------- | -------------------------------------- |
+| header  | [guild space header](#guild-space-header-structure) object     | The header displayed above the widgets |
+| widgets | array[[guild space widget](#guild-space-widget-object) object] | The widgets in the guild space         |
+
+###### Guild Space Header Structure
+
+| Field              | Type    | Description                          |
+| ------------------ | ------- | ------------------------------------ |
+| custom_banner_hash | ?string | The guild space's custom banner hash |
+
+### Guild Space Widget Object
+
+A guild space widget is a positioned content block in a guild space.
+
+###### Guild Space Widget Structure
+
+| Field              | Type                                                                         | Description                                          |
+| ------------------ | ---------------------------------------------------------------------------- | ---------------------------------------------------- |
+| id                 | snowflake                                                                    | The ID of the widget                                 |
+| type               | string                                                                       | The [type](#guild-space-widget-type) of widget       |
+| position           | [guild space widget position](#guild-space-widget-position-structure) object | The position of the widget                           |
+| config             | [guild space widget config](#guild-space-widget-config-structure) object     | The widget configuration                             |
+| requires_hydration | boolean                                                                      | Whether the widget's data must be fetched separately |
+| default_title      | string                                                                       | The default display title of the widget              |
+
+###### Guild Space Widget Position Structure
+
+| Field  | Type    | Description                                                    |
+| ------ | ------- | -------------------------------------------------------------- |
+| column | integer | The [column](#guild-space-widget-column) containing the widget |
+| order  | integer | The zero-based order of the widget in its column               |
+
+###### Guild Space Widget Config Structure
+
+| Field           | Type    | Description                                                 |
+| --------------- | ------- | ----------------------------------------------------------- |
+| type            | string  | The [type](#guild-space-widget-type) of widget              |
+| title? ^1^      | ?string | The title of the image and text widget (max 100 characters) |
+| text? ^1^       | ?string | The text of the image and text widget (max 500 characters)  |
+| image_hash? ^1^ | ?string | The image hash of the image and text widget                 |
+| heading? ^2^    | string  | The heading displayed above leaderboard entries             |
+
+^1^ Used when `type` is `IMAGE_TEXT`.
+
+^2^ Used when `type` is `LEADERBOARD`.
+
+###### Guild Space Widget Type
+
+| Value         | Name          | Description                    |
+| ------------- | ------------- | ------------------------------ |
+| leaderboard   | LEADERBOARD   | A leaderboard                  |
+| whiteboard    | WHITEBOARD    | A whiteboard                   |
+| popular_music | POPULAR_MUSIC | Popular music in the guild     |
+| image_text    | IMAGE_TEXT    | An image with a title and text |
+| live_activity | LIVE_ACTIVITY | Live guild activity            |
+
+###### Guild Space Widget Column
+
+| Value | Name  | Description      |
+| ----- | ----- | ---------------- |
+| 0     | LEFT  | The left column  |
+| 1     | RIGHT | The right column |
+
+### Guild Space Hydration Object
+
+A hydrated widget contains dynamic data for a guild space widget.
+
+###### Guild Space Hydration Structure
+
+| Field | Type      | Description                     |
+| ----- | --------- | ------------------------------- |
+| id    | snowflake | The ID of the hydrated widget   |
+| data  | object    | The dynamic data for the widget |
+
+###### Leaderboard Hydration Data Structure
+
+| Field   | Type                                                            | Description                     |
+| ------- | --------------------------------------------------------------- | ------------------------------- |
+| type    | string                                                          | The widget type (`leaderboard`) |
+| entries | array[[leaderboard entry](#leaderboard-entry-structure) object] | The leaderboard entries         |
+
+###### Leaderboard Entry Structure
+
+| Field | Type      | Description                     |
+| ----- | --------- | ------------------------------- |
+| id    | snowflake | The ID of the leaderboard entry |
+| name  | string    | The display name of the entry   |
+| score | float     | The score of the entry          |
+
+### Guild Space Catalog Widget Object
+
+A catalog widget describes a widget that can be added to a guild space.
+
+###### Guild Space Catalog Widget Structure
+
+| Field         | Type                                                                                     | Description                                       |
+| ------------- | ---------------------------------------------------------------------------------------- | ------------------------------------------------- |
+| type          | string                                                                                   | The [type](#guild-space-widget-type) of widget    |
+| name          | string                                                                                   | The display name of the widget                    |
+| max_instances | integer                                                                                  | The maximum number of this widget type in a space |
+| boost_price?  | integer                                                                                  | The guild boost price of the widget               |
+| assets        | [guild space catalog widget assets](#guild-space-catalog-widget-assets-structure) object | The catalog artwork for the widget                |
+
+###### Guild Space Catalog Widget Assets Structure
+
+| Field                      | Type    | Description                           |
+| -------------------------- | ------- | ------------------------------------- |
+| catalog_image_static_url   | ?string | The URL of the static catalog image   |
+| catalog_image_animated_url | ?string | The URL of the animated catalog image |
+
+###### Guild Space Publish Status
+
+| Value | Name      | Description                      |
+| ----- | --------- | -------------------------------- |
+| 0     | DRAFT     | The guild space is not published |
+| 1     | PUBLISHED | The guild space is published     |
+
+###### Example Guild Space
+
+```json
+{
+  "header": { "custom_banner_hash": null },
+  "widgets": [
+    {
+      "id": "1404823176543210987",
+      "type": "image_text",
+      "position": { "column": 0, "order": 0 },
+      "config": {
+        "type": "image_text",
+        "title": "Weekly Events",
+        "text": "Game night starts every Friday at 8 PM.",
+        "image_hash": "4f82b8e12f52c738965ef1c8824f55a0"
+      },
+      "requires_hydration": false,
+      "default_title": "Image + Text"
+    }
+  ]
+}
+```
+
+## Endpoints
+
+<RouteHeader method="PUT" url="/guilds/{guild.id}/space">
+  Set Guild Space
+</RouteHeader>
+
+Replaces the guild space configuration. Requires the `MANAGE_GUILD` permission. Returns the updated [guild space](#guild-space-object) object on success.
+
+###### JSON Params
+
+| Field   | Type                                                           | Description                    |
+| ------- | -------------------------------------------------------------- | ------------------------------ |
+| header  | [guild space header](#guild-space-header-structure) object     | The guild space header         |
+| widgets | array[[guild space widget](#guild-space-widget-object) object] | The widgets in the guild space |
+
+Widget IDs are omitted when adding new widgets. Existing widget IDs are included when modifying or repositioning them. An image and text widget accepts an `image` [image data](/reference#cdn-data) field in its `config` to replace or remove its image.
+
+<RouteHeader method="GET" url="/guilds/{guild.id}/space">
+  Get Guild Space
+</RouteHeader>
+
+Returns a [guild space](#guild-space-object) object. The guild space must be published unless the current user has the `MANAGE_GUILD` permission.
+
+<RouteHeader method="GET" url="/guilds/{guild.id}/space/widgets/hydrate">
+  Hydrate Guild Space Widgets
+</RouteHeader>
+
+Returns dynamic data for the requested guild space widgets.
+
+###### Query String Params
+
+| Field      | Type             | Description                       |
+| ---------- | ---------------- | --------------------------------- |
+| widget_ids | array[snowflake] | The IDs of the widgets to hydrate |
+
+###### Response Body
+
+| Field   | Type                                                                 | Description              |
+| ------- | -------------------------------------------------------------------- | ------------------------ |
+| widgets | array[[guild space hydration](#guild-space-hydration-object) object] | The hydrated widget data |
+
+<RouteHeader method="GET" url="/guilds/{guild.id}/space/widgets/catalog">
+  List Guild Space Widget Catalog
+</RouteHeader>
+
+Returns the widgets available to add to the guild space. Requires the `MANAGE_GUILD` permission.
+
+###### Response Body
+
+| Field   | Type                                                                           | Description                   |
+| ------- | ------------------------------------------------------------------------------ | ----------------------------- |
+| widgets | array[[guild space catalog widget](#guild-space-catalog-widget-object) object] | The available catalog widgets |
+
+<RouteHeader method="PATCH" url="/guilds/{guild.id}/space/settings">
+  Modify Guild Space Settings
+</RouteHeader>
+
+Modifies the guild space settings. Requires the `MANAGE_GUILD` permission. Returns the updated settings on success.
+
+###### JSON Params
+
+| Field          | Type    | Description                                                    |
+| -------------- | ------- | -------------------------------------------------------------- |
+| publish_status | integer | The [publish status](#guild-space-publish-status) of the space |

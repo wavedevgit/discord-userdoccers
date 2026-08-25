@@ -531,3 +531,119 @@ Returns an empty object on success.
 | Field | Type   | Description                                                  |
 | ----- | ------ | ------------------------------------------------------------ |
 | token | string | The report review token obtained from the report review link |
+
+<RouteHeader method="POST" url="/debug-logs/multi/{multi.id}">
+  Upload Debug Logs
+</RouteHeader>
+
+Uploads one or more client debug logs as multipart attachments. The client uses `rtc` as the path parameter and includes a `media_engine_state.json` attachment with `extraInfo` and `mediaEngineState` fields.
+
+###### Response Body
+
+| Field          | Type    | Description                                |
+| -------------- | ------- | ------------------------------------------ |
+| success_count? | integer | The number of files successfully stored    |
+| store_success? | boolean | Whether the files were stored successfully |
+| id_match?      | boolean | Whether the upload ID matched              |
+| all_success?   | boolean | Whether all upload operations succeeded    |
+
+<RouteHeader method="POST" url="/channels/{channel.id}/{message.id}/mod-report">
+  Submit Moderator Message Report
+</RouteHeader>
+
+Submits a message report to the guild's moderators.
+
+###### JSON Params
+
+| Field       | Type                                 | Description                                    |
+| ----------- | ------------------------------------ | ---------------------------------------------- |
+| version     | string                               | The version of the report menu schema          |
+| variant     | string                               | The report menu variant                        |
+| language    | string                               | The report menu language (default `en`)        |
+| breadcrumbs | array[integer]                       | The selected report node IDs                   |
+| elements    | map[string, array[string] \| string] | The selected and entered report element values |
+| name        | string                               | The report menu name                           |
+| channel_id  | snowflake                            | The ID of the channel containing the message   |
+| message_id  | snowflake                            | The ID of the reported message                 |
+
+<RouteHeader method="POST" url="/private/bug-reports">
+  Create Bug Report
+</RouteHeader>
+
+Submits a private client bug report.
+
+###### Form Params
+
+| Field                         | Type    | Description                                                |
+| ----------------------------- | ------- | ---------------------------------------------------------- |
+| name                          | string  | The report name (max 100 characters)                       |
+| priority                      | integer | The [bug report priority](#bug-report-priority)            |
+| override_platform_information | boolean | Whether supplied platform information overrides the client |
+| theme                         | string  | The client theme                                           |
+| description?                  | string  | The report description                                     |
+| external_url?                 | string  | An external URL (max 5000 characters in the client)        |
+| build_override?               | string  | The active build override ID                               |
+| experiment_overrides?         | string  | Comma-separated `experiment_id:variant_id` pairs           |
+| asana_inbox_id?               | string  | The selected feature's Asana inbox ID                      |
+| feature_name?                 | string  | The selected feature name                                  |
+| device?                       | string  | The overridden device                                      |
+| os?                           | string  | The overridden operating system                            |
+| os_version?                   | string  | The overridden operating system version                    |
+| client_version?               | string  | The overridden client version                              |
+| client_build_number?          | string  | The overridden client build number                         |
+| release_channel?              | string  | The overridden release channel                             |
+| locale?                       | string  | The overridden locale                                      |
+| attachments?                  | file    | Files attached to the report                               |
+
+###### Bug Report Priority
+
+| Value | Description |
+| ----- | ----------- |
+| 0     | Unknown     |
+| 1     | Unknown     |
+| 2     | Unknown     |
+| 3     | Unknown     |
+
+###### Response Body
+
+The response is an object representing the created Asana task and may contain a `permalink_url` field.
+
+<RouteHeader method="POST" url="/private/clip-feedback">
+  Submit Clip Feedback
+</RouteHeader>
+
+Submits feedback about a generated clip.
+
+###### Form Params
+
+| Field                | Type   | Description                                       |
+| -------------------- | ------ | ------------------------------------------------- |
+| file                 | file   | The generated clip as an MP4 file                 |
+| clip_uuid            | string | The UUID of the clip                              |
+| rating               | string | The [clip feedback rating](#clip-feedback-rating) |
+| clip_type            | string | The type of clip                                  |
+| description?         | string | Additional feedback (max 50000 characters)        |
+| os?                  | string | The client operating system                       |
+| os_version?          | string | The client operating system version               |
+| client_version?      | string | The client version                                |
+| client_build_number? | string | The client build number                           |
+| release_channel?     | string | The client release channel                        |
+
+###### Clip Feedback Rating
+
+| Value   | Description       |
+| ------- | ----------------- |
+| good    | Positive feedback |
+| neutral | Neutral feedback  |
+| bad     | Negative feedback |
+
+###### Example Form Params
+
+```json
+{
+  "clip_uuid": "2f731670-f9d1-49f6-a501-13ef875f469a",
+  "rating": "good",
+  "clip_type": "user",
+  "description": "The audio and video were synchronized."
+}
+```

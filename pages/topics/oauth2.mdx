@@ -1158,3 +1158,27 @@ Returns an [OAuth2 authorization](#oauth2-authorization-object) object for the g
 </RouteHeader>
 
 Revokes the given authorization. Returns a 204 empty response on success. Fires multiple [OAuth2 Token Revoke](/gateway/gateway-events#oauth2-token-revoke) and optionally a [User Application Remove](/gateway/gateway-events#user-application-remove) and [User Connections Update](/gateway/gateway-events#user-connections-update) Gateway event.
+
+<RouteHeader method="GET" url="/oauth2/authorize/webhook-channels">
+  List OAuth2 Authorize Webhook Channels
+</RouteHeader>
+
+Returns oauth2 authorize webhook channels.
+
+###### Query String Params
+
+| Field     | Type      | Description         |
+| --------- | --------- | ------------------- |
+| guild_id? | snowflake | The ID of the guild |
+
+<RouteHeader method="POST" url="/oauth2/account-linking-achievement">
+  Create Account Linking Achievement
+</RouteHeader>
+
+Creates an account-linking achievement.
+
+###### JSON Params
+
+| Field          | Type      | Description               |
+| -------------- | --------- | ------------------------- |
+| application_id | snowflake | The ID of the application |

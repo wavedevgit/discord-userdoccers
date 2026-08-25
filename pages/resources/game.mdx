@@ -1,6 +1,6 @@
 # Games
 
-The games APIs further extend applications resources to power advanced game detection and rich presence features.
+The games APIs extend application resources to power game detection, search, and rich presence features.
 
 ### Detectable Application Object
 
@@ -110,7 +110,7 @@ The games APIs further extend applications resources to power advanced game dete
 | sku         | ?string | The SKU of the game                              |
 | distributor | string  | The [distributor](#distributor-type) of the game |
 
-##### Distributor Type
+###### Distributor Type
 
 | Value          | Description         |
 | -------------- | ------------------- |
@@ -373,6 +373,26 @@ This structure is a superset of the [detectable application](#detectable-applica
 | failed_unknown                                    | Unknown                                                 |
 
 ## Endpoints
+
+<RouteHeader method="GET" url="/games/autocomplete">
+  Search Games
+</RouteHeader>
+
+Returns games matching the normalized query.
+
+###### Query String Params
+
+| Field | Type   | Description           |
+| ----- | ------ | --------------------- |
+| q     | string | The game search query |
+
+###### Game Search Result Structure
+
+| Field | Type      | Description                                       |
+| ----- | --------- | ------------------------------------------------- |
+| id    | snowflake | The ID of the game application                    |
+| name  | string    | The name of the game                              |
+| icon  | ?string   | The game's [icon hash](/reference#cdn-formatting) |
 
 <RouteHeader method="GET" url="/applications/{application.id}/game-claims">
   List Application Game Claims

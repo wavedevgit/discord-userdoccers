@@ -1,0 +1,107 @@
+# Safety Flows
+
+Safety flows provide task-based account verification and safety workflows.
+
+### Safety Flow Task Object
+
+A safety flow task describes the current task assigned to the user.
+
+###### Safety Flow Task Structure
+
+| Field         | Type                                                                | Description                                 |
+| ------------- | ------------------------------------------------------------------- | ------------------------------------------- |
+| task_id       | string                                                              | The ID of the task                          |
+| task_type     | integer                                                             | The [type of task](#safety-flow-task-type)  |
+| assignment_id | string                                                              | The ID of the task assignment               |
+| ui_component  | [safety flow UI component](#safety-flow-ui-component-object) object | The UI component used to complete the task  |
+| flow_context  | [safety flow context](#safety-flow-context-object) object           | The context of the flow containing the task |
+
+###### Safety Flow Task Type
+
+| Value | Name                        | Description                                  |
+| ----- | --------------------------- | -------------------------------------------- |
+| -1    | REFRESH_APP                 | Requires the client to refresh               |
+| 3     | EMAIL_VERIFICATION          | Requires email verification                  |
+| 9     | AGE_VERIFICATION            | Requires age verification                    |
+| 10    | PARENTAL_CONSENT_CONNECTION | Requires a Family Center parental connection |
+
+### Safety Flow UI Component Object
+
+A safety flow UI component identifies the interface and configuration for a task.
+
+###### Safety Flow UI Component Structure
+
+| Field     | Type                                                          | Description                         |
+| --------- | ------------------------------------------------------------- | ----------------------------------- |
+| component | [safety flow component](#safety-flow-component-object) object | The component rendered for the task |
+
+### Safety Flow Component Object
+
+A safety flow component contains a component type and type-specific configuration.
+
+###### Safety Flow Component Structure
+
+| Field | Type   | Description                                       |
+| ----- | ------ | ------------------------------------------------- |
+| type  | string | The [component type](#safety-flow-component-type) |
+| data? | object | Type-specific component data                      |
+
+###### Safety Flow Component Type
+
+| Value                       | Description                                   |
+| --------------------------- | --------------------------------------------- |
+| email_verification          | An email verification component               |
+| phone_verification          | A phone verification component                |
+| generic_call_to_action      | A generic call-to-action component            |
+| refresh_app                 | A client refresh component                    |
+| age_verification            | An age verification component                 |
+| parental_consent_connection | A Family Center parental connection component |
+
+For a `parental_consent_connection` component, the component object may additionally contain `link_code`, `link_code_expires_at`, and `pending_requests`. Each pending request contains `parent_id`, `parent_username`, `parent_avatar`, and `created_at` fields.
+
+### Safety Flow Context Object
+
+A safety flow context identifies the flow and its ordered tasks.
+
+###### Safety Flow Context Structure
+
+| Field   | Type          | Description                                              |
+| ------- | ------------- | -------------------------------------------------------- |
+| flow_id | string        | The ID of the flow                                       |
+| tasks   | array[object] | The ordered tasks, each containing a `task_type` integer |
+
+## Endpoints
+
+<RouteHeader method="GET" url="/safety-flows/task">
+  Get Safety Flow Task
+</RouteHeader>
+
+Returns the current [safety flow task](#safety-flow-task-object) object. Returns a 204 empty response when there is no current task.
+
+<RouteHeader method="POST" url="/safety-flows/task">
+  Advance Safety Flow Task
+</RouteHeader>
+
+Submits data for the current task. Returns a [safety flow task](#safety-flow-task-object) object on success.
+
+###### JSON Params
+
+| Field   | Type   | Description                        |
+| ------- | ------ | ---------------------------------- |
+| task_id | string | The ID of the task                 |
+| flow_id | string | The ID of the flow                 |
+| data    | object | Component-specific submission data |
+
+For components without input, `data` contains `{ "type": "empty" }`.
+
+###### Example JSON Params
+
+```json
+{
+  "task_id": "01J56Q1VQY9Q8X2V7H7N9P4BZA",
+  "flow_id": "01J56Q0SD5F4M3J6TBQX8X8Z2C",
+  "data": {
+    "type": "empty"
+  }
+}
+```

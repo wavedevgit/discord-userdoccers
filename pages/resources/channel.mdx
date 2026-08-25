@@ -659,6 +659,21 @@ A lobby linked to a channel.
 | linked_at                         | ISO8601 timestamp | When the lobby was linked to channel                                         |
 | require_application_authorization | boolean           | Whether users must authorize the application to send messages in the channel |
 
+### Channel Follower Stats Object
+
+Statistics about the audience of a followed announcement channel.
+
+###### Channel Follower Stats Structure
+
+| Field                              | Type    | Description                                           |
+| ---------------------------------- | ------- | ----------------------------------------------------- |
+| channels_following                 | integer | The number of channels following the channel          |
+| guild_members                      | integer | The total number of members in following guilds       |
+| guilds_following                   | integer | The number of guilds following the channel            |
+| users_seen_ever                    | integer | The number of users who have seen a published message |
+| subscribers_gained_since_last_post | integer | The followers gained since the last published message |
+| subscribers_lost_since_last_post   | integer | The followers lost since the last published message   |
+
 ## Endpoints
 
 <RouteHeader method="GET" url="/users/@me/channels">
@@ -926,7 +941,7 @@ For Community guilds, the Rules or Guidelines channel and the Community Updates 
 | silent? | boolean | Whether to leave the group DM without sending a system message (default false) |
 
 <RouteHeader method="POST" url="/users/@me/channels/bulk-leave">
-  Bulk Leave Group DMs 
+  Bulk Leave Group DMs
 </RouteHeader>
 
 Leave multiple group DMs. Returns a 204 empty response on success. Fires multiple [Channel Delete](/gateway/gateway-events#channel-delete) Gateway events.
@@ -1739,3 +1754,60 @@ Returns the linked accounts for users in a group DM.
 </RouteHeader>
 
 Unlinks the linked lobby from the channel. Requires the `MANAGE_CHANNELS` permission. Returns the updated [channel](#channel-object) object on success. Fires a [Lobby Update](/gateway/gateway-events#lobby-update) and [Channel Update](/gateway/gateway-events#channel-update) Gateway event.
+
+<RouteHeader method="POST" url="/threads/bulk">
+  Get Threads Bulk
+</RouteHeader>
+
+Returns the requested [thread channels](#channel-object) that are visible to the current user.
+
+###### JSON Params
+
+| Field      | Type             | Description                      |
+| ---------- | ---------------- | -------------------------------- |
+| thread_ids | array[snowflake] | The IDs of the threads to return |
+
+###### Response Body
+
+| Field | Type                                     | Description                 |
+| ----- | ---------------------------------------- | --------------------------- |
+| items | array[[channel](#channel-object) object] | The threads that were found |
+
+<RouteHeader method="POST" url="/channels/{channel.id}/voice-hangout">
+  Set Voice Hangout Media
+</RouteHeader>
+
+Sets or clears the voice hangout media for the channel. Returns a 204 empty response on success.
+
+###### JSON Params
+
+| Field     | Type   | Description                                                   |
+| --------- | ------ | ------------------------------------------------------------- |
+| url? ^1^  | string | The external media URL, or an empty string to clear the media |
+| hash? ^1^ | string | The hash of a previously uploaded voice hangout image         |
+
+^1^ Exactly one of `url` or `hash` is sent.
+
+<RouteHeader method="GET" url="/channels/{channel.id}/follower-stats">
+  Get Channel Follower Stats
+</RouteHeader>
+
+Returns a [channel follower stats](#channel-follower-stats-object) object for the announcement channel.
+
+<RouteHeader method="POST" url="/channels/{channel.id}/clips-remote-trigger">
+  Send Clips Remote Trigger
+</RouteHeader>
+
+Creates a remote clip trigger for the current voice session and application.
+
+###### JSON Params
+
+| Field          | Type      | Description               |
+| -------------- | --------- | ------------------------- |
+| application_id | snowflake | The ID of the application |
+
+###### Response Body
+
+| Field           | Type       | Description                       |
+| --------------- | ---------- | --------------------------------- |
+| remote_clip_id? | ?snowflake | The ID of the remote clip trigger |

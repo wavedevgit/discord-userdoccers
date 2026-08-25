@@ -1,0 +1,27 @@
+# Changelogs
+
+Changelog endpoints retrieve and acknowledge product update messages.
+
+## Endpoints
+
+<RouteHeader method="POST" url="/changelogs/@me/messages">
+  Acknowledge Changelog Message
+</RouteHeader>
+
+Acknowledges a changelog message for the current user.
+
+###### JSON Params
+
+| Field        | Type      | Description             |
+| ------------ | --------- | ----------------------- |
+| changelog_id | snowflake | The ID of the changelog |
+
+###### Example JSON Params
+
+```json
+{
+  "changelog_id": "1262930557277249536"
+}
+```
+
+The changelog configuration is fetched from `https://cdn.discordapp.com/changelogs/config_desktop.json`. Individual localized changelogs are fetched from `https://cdn.discordapp.com/changelogs/desktop/{changelog.id}/{locale}.json`, falling back to `en-US` when the requested locale is unavailable.

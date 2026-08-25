@@ -1,0 +1,40 @@
+# CDN
+
+CDN endpoints serve binary media assets and do not require authentication.
+
+## CDN Endpoints
+
+| Name                                        | Path                                                                          | Description                                                   |
+| ------------------------------------------- | ----------------------------------------------------------------------------- | ------------------------------------------------------------- |
+| Guild Member Avatar                         | `/guilds/{guild.id}/users/{user.id}/avatars/{asset.hash}.{format}`            | Returns the guild member avatar asset                         |
+| Role Icon                                   | `/roles/{role.id}/icons/{asset.hash}.png`                                     | Returns the role icon asset                                   |
+| Guild Icon                                  | `/guilds/{guild.id}/icons/{asset.hash}.{format}`                              | Returns the guild icon asset                                  |
+| Guild Template Icon                         | `/templates/{template.id}/icons/{asset.hash}.{format}`                        | Returns the guild template icon asset                         |
+| Emoji                                       | `/emojis/{emoji.id}.{format}`                                                 | Returns the emoji asset                                       |
+| Guild Splash                                | `/guilds/{guild.id}/splashes/{asset.hash}.jpg`                                | Returns the guild splash asset                                |
+| Guild Discovery Splash                      | `/guilds/{guild.id}/discovery-splashes/{asset.hash}.jpg`                      | Returns the guild discovery splash asset                      |
+| Guild Banner                                | `/guilds/{guild.id}/banners/{asset.hash}.{format}`                            | Returns the guild banner asset                                |
+| Guild Resource Channels Icon                | `/guilds/{guild.id}/avatars/{asset.hash}.{format}`                            | Returns the guild resource channels icon asset                |
+| Guild New Member Actions Icon               | `/guilds/{guild.id}/avatars/{asset.hash}.{format}`                            | Returns the guild new member actions icon asset               |
+| Guild Home Header                           | `/guilds/{guild.id}/home-headers/{asset.hash}.jpg`                            | Returns the guild home header asset                           |
+| Avatar                                      | `/users/{user.id}/avatars/{asset.hash}.{format}`                              | Returns the avatar asset                                      |
+| Archived Avatar                             | `/avatars/{user.id}/archived/{avatar.id}/{asset.hash}.{format}`               | Returns the archived avatar asset                             |
+| User Banner                                 | `/users/{user.id}/banners/{asset.hash}.{format}`                              | Returns the user banner asset                                 |
+| Avatar Decoration Presets                   | `/avatar-decoration-presets/{asset.hash}.{format}`                            | Returns the avatar decoration preset asset                    |
+| Guild Member Banner                         | `/guilds/{guild.id}/users/{user.id}/banners/{asset.hash}.{format}`            | Returns the guild member banner asset                         |
+| Voice Hangout Banner                        | `/voice-hangouts/{voice-hangout.id}/{param.id}`                               | Returns the voice hangout banner asset                        |
+| Channel Icon                                | `/channels/{channel.id}/icons/{asset.hash}.jpg`                               | Returns the channel icon asset                                |
+| Application Icon                            | `/applications/{application.id}/app-icons/{asset.hash}.png`                   | Returns the application icon asset                            |
+| Store Asset                                 | `/store/applications/{application.id}/assets/{asset.hash}.{format}`           | Returns the store asset                                       |
+| Application Asset                           | `/applications/{application.id}/app-assets/{asset.hash}.{format}`             | Returns the application asset                                 |
+| Sticker Asset                               | `/stickers/{sticker.id}.{format}`                                             | Returns the sticker asset                                     |
+| Guild Event Image                           | `/guild-events/{event.id}/images/{asset.hash}.{format}`                       | Returns the guild event image asset                           |
+| Tenor Asset Path                            | `/tenor`                                                                      | Returns the tenor asset path asset                            |
+| Giphy Asset Path                            | `/giphy`                                                                      | Returns the giphy asset path asset                            |
+| Klipy Asset Path                            | `/klipy`                                                                      | Returns the klipy asset path asset                            |
+| Video Filter Asset Storage                  | `/users/{user.id}/video-filter-assets/{asset.id}/{asset.hash}.{format}`       | Returns the video filter asset                                |
+| Application Directory Collection Item Image | `/application-directory/collection-items/{item.id}/{asset.hash}.{format}`     | Returns the application directory collection item image asset |
+| Badge Icon                                  | `/badge-icons/{asset.hash}.png`                                               | Returns the badge icon asset                                  |
+| Guild Space Image Text Widget Image         | `/guild-space/{guild.id}/image-text-widget/{widget.id}/{asset.hash}.{format}` | Returns the guild space image text widget image asset         |
+
+The `format` path parameter is the requested media format. Supported formats depend on the asset and commonly include `png`, `jpg`, `webp`, and `gif`.
